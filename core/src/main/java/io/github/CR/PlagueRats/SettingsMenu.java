@@ -12,7 +12,7 @@ public class SettingsMenu extends MainMenu {
 
     public SettingsMenu(final RatGame game) {
         buttonNames = new String[] {
-            "Resolution", "Sounds Volume", "Music Volume"
+            "Resolution", "Sounds Volume", "Music Volume", "Back"
         };
 
         TextButton resolutionButton = gFact.createTextButton(buttonNames[0], skin);

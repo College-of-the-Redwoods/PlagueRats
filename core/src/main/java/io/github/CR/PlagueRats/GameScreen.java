@@ -3,19 +3,21 @@ package io.github.CR.PlagueRats;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
     private final OrthographicCamera camera;
-    private final SpriteBatch batch;
+    private final SpriteBatch spriteBatch;
+    Texture backgroundTexture;
     Texture ratTexture;
     FitViewport viewport;
     float ratPosY;
@@ -29,8 +31,9 @@ public class GameScreen implements Screen {
         // Create camera and SpriteBatch
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch = new SpriteBatch();
-        ratTexture = new Texture("ratTestSprite.png");
+        spriteBatch = new SpriteBatch();
+        backgroundTexture = new Texture("backgroundmap.jpeg");
+        ratTexture = new Texture("ladyrat.png");
         viewport = new FitViewport(8, 5);
         ratPosX = ((float) Gdx.graphics.getWidth() / 2) - 200;
         ratPosY = ((float) Gdx.graphics.getHeight() / 2) - 200;
@@ -53,45 +56,57 @@ public class GameScreen implements Screen {
 
     private void draw() {
         // Clear the screen
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(Color.BLACK);
 
         // Update camera
-         camera.update();
+        camera.update();
 
-//        viewport.apply();
+        viewport.apply();
 
-        batch.setProjectionMatrix(camera.combined);
+        // Draw something
+        spriteBatch.begin();
 
-        // Draw something (e.g., a simple rectangle)
-        batch.begin();
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
 
-        ratSprite.draw(batch);
+        spriteBatch.draw(backgroundTexture, ratPosX, ratPosY, worldWidth, worldHeight);
+        ratSprite.draw(spriteBatch);
 
-        batch.end();
+        spriteBatch.end();
     }
 
     private void logic() {
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
+        float ratWidth = ratSprite.getWidth();
+        float ratHeight = ratSprite.getHeight();
 
+        // trying to keep the rat in the screen
+        ratSprite.setX(MathUtils.clamp(ratSprite.getX(), 0, worldWidth - ratWidth));
     }
 
     private void input() {
         float speed = 3f;
         float delta = Gdx.graphics.getDeltaTime();
-        int key;
 
-//        if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
-//            key =
-//        }
-//
-//        switch (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
-//            case 1:
-//                break;
-//
-//        }
-
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            ratSprite.translateX(speed * delta);
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            ratSprite.translateX(-speed * delta);
+        }
+/*
+        else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            ratSprite.translateY(speed * delta); //extrapolation might not work
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            ratSprite.translateY(-speed * delta); //extrapolation might not work
+        }
+*/
         if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+            viewport.unproject(touchPos);
+            ratSprite.setCenterX(touchPos.x);
         }
     }
 
@@ -119,6 +134,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // Clean up resources
-        batch.dispose();
+        spriteBatch.dispose();
     }
 }

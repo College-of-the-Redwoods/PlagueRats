@@ -31,7 +31,7 @@ public class MainMenu implements Screen {
         batch = new SpriteBatch();
 
         // Load background texture
-        background = new Texture("background.jpg");
+        background = new Texture("backgroundmap.jpeg");
 
         // Create stage and skin for UI elements
         stage = new Stage(new ScreenViewport());
@@ -100,6 +100,7 @@ public class MainMenu implements Screen {
     }
 
     public void clearUI() {
+
         stage.dispose();
     }
 }
