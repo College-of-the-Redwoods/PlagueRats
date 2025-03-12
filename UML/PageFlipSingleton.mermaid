@@ -1,0 +1,11 @@
+classDiagram
+    PageFlip --> PageFlipHelper :Contains
+
+    class PageFlip {
+        -PageFlip()
+        +$ getInstance(): PageFlip
+        +animateFlip()
+    }
+    class PageFlipHelper {
+        -$ final PageFlip FLIP_INSTANCE
+    }
