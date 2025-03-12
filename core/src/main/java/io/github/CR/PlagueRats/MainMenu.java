@@ -23,6 +23,9 @@ public class MainMenu implements Screen {
     public String jsonString;
     GUIFactory gFact;
 
+    // TODO
+    //   Implement the Command Design Pattern for the UI buttons with a receiver class that handles the different button functions
+
     public MainMenu() {
 
         // Create camera and SpriteBatch
