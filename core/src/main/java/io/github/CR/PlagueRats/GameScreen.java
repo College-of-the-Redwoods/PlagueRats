@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(final RatGame game) {
 
-        // Create camera and SpriteBatch
+        // Defining variables in the constructor for some reason
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch = new SpriteBatch();
@@ -94,12 +94,13 @@ public class GameScreen implements Screen {
     }
 
     private void input() {
-        float speed = 3f;
-        float delta = Gdx.graphics.getDeltaTime();
-        int key;
+//        float speed = 3f;
+//        float delta = Gdx.graphics.getDeltaTime();
+//        int key;
 
-
+        // Detects when you click the screen
         if (Gdx.input.isTouched()) {
+            // Moves sprite up and plays a squeak sound when you click
             ratSprite.translateY(40);
             ratSound.play();
         }
