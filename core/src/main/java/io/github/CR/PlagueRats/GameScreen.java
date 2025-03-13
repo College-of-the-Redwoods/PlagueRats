@@ -3,14 +3,18 @@ package io.github.CR.PlagueRats;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.TimerTask;
 
 public class GameScreen implements Screen {
 
@@ -22,6 +26,8 @@ public class GameScreen implements Screen {
     float ratPosX;
     Sprite ratSprite;
     Vector2 touchPos;
+    Timer timer;
+    Sound ratSound;
 
 
     public GameScreen(final RatGame game) {
@@ -36,8 +42,11 @@ public class GameScreen implements Screen {
         ratPosY = ((float) Gdx.graphics.getHeight() / 2) - 200;
         ratSprite = new Sprite(ratTexture);
         touchPos = new Vector2();
+        ratSound = Gdx.audio.newSound(Gdx.files.internal("audio/sfx/squeak.mp3"));
 
     }
+
+
 
     @Override
     public void show() {
@@ -49,6 +58,15 @@ public class GameScreen implements Screen {
         input();
         logic();
         draw();
+
+//        int timerLength = 500;
+//        timer = new Timer();
+//
+//        TimerTask task = new TimerTask() {
+//            public void run() {
+//
+//            }
+//        }
     }
 
     private void draw() {
@@ -80,18 +98,10 @@ public class GameScreen implements Screen {
         float delta = Gdx.graphics.getDeltaTime();
         int key;
 
-//        if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
-//            key =
-//        }
-//
-//        switch (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
-//            case 1:
-//                break;
-//
-//        }
 
         if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+            ratSprite.translateY(40);
+            ratSound.play();
         }
     }
 
