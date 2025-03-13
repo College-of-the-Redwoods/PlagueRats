@@ -1,0 +1,28 @@
+classDiagram
+    Sprite <|-- RatSprite: implements
+    Sprite <|-- VillagerSprite: implements
+    SpriteFactory <|-- RatSpriteFactory: extends
+    SpriteFactory <|-- VillagerSpriteFactory: extends
+    RatSpriteFactory --> RatSprite
+    VillagerSpriteFactory --> VillagerSprite
+
+    class SpriteFactory {
+        <<abstract>>
+        +instantiateSprite(): Sprite
+    }
+    class RatSpriteFactory {
+        +instantiateSprite(): RatSprite
+    }
+    class VillagerSpriteFactory {
+        +instantiateSprite(): VillagerSprite
+    }
+    class Sprite {
+        <<interface>>
+        +render()
+    }
+    class RatSprite {
+        +render()
+    }
+    class VillagerSprite {
+        +render()
+    }
