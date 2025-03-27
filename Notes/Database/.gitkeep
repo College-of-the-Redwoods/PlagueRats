@@ -2,3 +2,11 @@ https://github.com/orgs/College-of-the-Redwoods/projects/1/views/1?sliceBy%5Bval
 The user story assigned to me was to learn code that can communicate with the database and the game.
 I unfortunately was not able to complete this task in the two week sprint.
 I will however continue to research and test different way to accomplish this task.
+
+https://github.com/orgs/College-of-the-Redwoods/projects/1/views/1?pane=issue&itemId=100744511&issue=College-of-the-Redwoods%7CPlagueRats%7C113
+I have gotten very familiar, with lots of help from Trevor, with Docker, Redis, and MySQL.
+Specifically, I have created a Python project to test the capabilities of the redis caching system.
+I was able to create a semi functioning api that can pull data from a test database.  I was also able to implement
+flask into the project as well.  I still have a lot to do with this though.  Trevor has also spoken to me about
+creating a seperate project for the Database group seeing as we are coding mostly in python so as soon as that happens
+, I will commit and push what I have completed to that repository.
