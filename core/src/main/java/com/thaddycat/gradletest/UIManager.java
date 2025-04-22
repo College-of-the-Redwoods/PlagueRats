@@ -104,7 +104,6 @@ public class UIManager {
         table.add(selectJane).pad(10);
         table.row();
         table.add(johnCommandLabel).padBottom(10); // Puts it under John's button
-        table.row();
         table.add(janeCommandLabel).padBottom(10); // Puts it under Jane's button
 
         stage.addActor(table);
