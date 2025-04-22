@@ -1,0 +1,12 @@
+PC: true
+Name: Jane Test
+x: 3
+y: 1
+HP: 42
+MP: 60
+AP: 0
+XP: 99
+SP: 0
+Position: x = 3, y = 1
+Equipment: Bastard Sword, Buckler
+sprite: jane.png
