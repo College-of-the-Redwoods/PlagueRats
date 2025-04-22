@@ -36,4 +36,13 @@ public class CommandMacro implements Command {
     public void reset() {
         this.commands.clear();
     }
+
+    @Override
+    public Character getCharacter() {
+        // Choose how to handle this.
+        // If CommandMacro has a character field, return it.
+        // If it's a collection of commands, you might return null or the first character.
+        return null; // Or whatever makes sense in your context
+    }
+
 }

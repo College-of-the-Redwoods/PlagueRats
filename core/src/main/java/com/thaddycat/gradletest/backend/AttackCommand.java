@@ -53,4 +53,9 @@ public class AttackCommand implements Command {
         return defender;
     }
 
+    public Character getCharacter() {
+        return this.attacker;
+    }
+
+
 }

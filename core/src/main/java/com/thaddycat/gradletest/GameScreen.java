@@ -89,8 +89,8 @@ public class GameScreen implements Screen {
                     float x = target.getPosition().getX() * CELL_SIZE;
                     float y = target.getPosition().getY() * CELL_SIZE;
 
-                    if (c.getName().equals("Jane")) {
-                        batch.setColor(1f, 0.2f, 0.6f, 1f); // Deeper pink tint
+                    if (c.getName().equals("Jane Test")) {
+                        batch.setColor(1f, 0f, 0f, 1f); // Deeper pink tint
                     } else {
                         batch.setColor(0.3f, 0.7f, 1f, 1f); // Softer blue
                     }
@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
                 Character c = attackCmd.getAttacker();
                 Character target = attackCmd.getTarget();
                 if (target != null) {
-                    Texture sword = c.getName().equals("John") ? swordBlue : swordPink;
+                    Texture sword = c.getName().equals("John Test") ? swordBlue : swordPink;
                     float x = target.getPosition().getX() * CELL_SIZE;
                     float y = target.getPosition().getY() * CELL_SIZE;
                     batch.setColor(Color.WHITE);
@@ -192,7 +192,7 @@ public class GameScreen implements Screen {
                             MoveCommand move = new MoveCommand(selected, clickedCell);
                             game.enqueueCommand(move);
                             Sound moveSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-                            moveSound.play();
+                            moveSound.play(0.25f);
                         } else {
                             System.out.println("Move failed: cell is occupied.");
                         }
@@ -216,7 +216,7 @@ public class GameScreen implements Screen {
                             AttackCommand attack = new AttackCommand(selected, target);
                             game.enqueueCommand(attack);
                             Sound attackSound = Gdx.audio.newSound(Gdx.files.internal("attack.mp3"));
-                            attackSound.play();
+                            attackSound.play(0.25f);
                             System.out.println("Attack command enqueued.");
                         } else {
                             System.out.println("Attack failed: no target found or trying to attack self.");

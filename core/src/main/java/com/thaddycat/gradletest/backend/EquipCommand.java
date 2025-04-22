@@ -16,4 +16,9 @@ public class EquipCommand implements Command {
     public void reset() {
 
     }
+    @Override
+    public Character getCharacter() {
+        return null;
+    }
+
 }

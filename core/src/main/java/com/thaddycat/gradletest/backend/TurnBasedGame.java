@@ -10,43 +10,19 @@ public class TurnBasedGame {
 
 
     public void executeStep() {
-        System.out.println("[DEBUG] TurnBasedGame.executeStep() called.");
-
+        System.out.println("Executing Game Step...");
         for (Character c : Character.getCharacterArrayList()) {
-            CommandManager cm = c.getCommandManager();
-            if (cm == null) {
-                System.err.println("CommandManager is null for " + c.getName());
-                continue;
-            }
-            // TEMP: add a fake command for testing purposes
-            cm.addCommand(new Command() {
-                @Override
-                public void execute() {
-                    System.out.println("[TEST] Executed dummy command for " + c.getName());
-                }
-
-                @Override
-                public void undo() {
-                    System.out.println("[TEST] Undid dummy command for " + c.getName());
-                }
-                @Override
-                public void reset() {
-                    // No-op for dummy command
-                }
-            });
-
             System.out.println("Executing CommandManager for " + c.getName());
-            cm.execute();
+            c.getCommandManager().execute();
         }
+        System.out.println("Game Step Successfully Executed. \n");
 
-        System.out.println("[DEBUG] Game Step Successfully Executed.\n");
     }
 
     public void enqueueCommand(Command command) {
         /* Remove any existing command for this character
         commandQueue.removeIf(cmd -> cmd.getCharacter() == newCommand.getCharacter());
         commandQueue.add(newCommand); */
-
 
         if (command instanceof MoveCommand) {
             MoveCommand move = (MoveCommand) command;
