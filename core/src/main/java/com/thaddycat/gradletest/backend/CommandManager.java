@@ -21,8 +21,15 @@ public class CommandManager {
 
     public void addCommand(Command command) {
         this.currentCommands.add(command);
-        System.out.println("Adding command: " + command);
+    }
+
+    // Only allows ONE command at a time per character
+    public void setQueuedCommand(Command command) {
+        // Remove any existing command from the same character
+        currentCommands.removeIf(c -> c.getCharacter() == command.getCharacter());
+
         currentCommands.add(command);
+        System.out.println("Queued command for: " + command.getCharacter().getName());
     }
 
     public void execute() {
@@ -63,6 +70,9 @@ public class CommandManager {
     }
     public List<Command> getQueuedCommands() {
         return currentCommands;
+    }
+    public void clearQueuedCommands() {
+        currentCommands.clear();
     }
 
 }

@@ -119,18 +119,15 @@ cellArray.add(new Cell(x, y));
 
 **** added spritePath as a parameter for Character, PCCharacter and NPCCharacter. 
 
-**** added this method to TurnBasedGame.java:
-public void enqueueCommand(Command command) {
-if (command instanceof MoveCommand) {
-MoveCommand move = (MoveCommand) command;
-move.getCharacter().getCommandManager().addCommand(move);
-} else if (command instanceof AttackCommand) {
-AttackCommand attack = (AttackCommand) command;
-attack.getAttacker().getCommandManager().addCommand(attack);
-} else {
-System.err.println("Unknown command type: " + command.getClass().getSimpleName());
-}
-}
+**** added replaced addCommand() method to setQ TurnBasedGame.java:
+// Only allows ONE command at a time per character
+public void setQueuedCommand(Command command) {
+// Remove any existing command from the same character
+currentCommands.removeIf(c -> c.getCharacter() == command.getCharacter());
+
+        currentCommands.add(command);
+        System.out.println("Queued command for: " + command.getCharacter().getName());
+    }
 
 **** added in MoveCommand.java:
 
@@ -169,7 +166,11 @@ public Character getTarget() {
 return defender;
 }
 
-**** added this method to CommandManager.java:
+**** added these methods to CommandManager.java:
 public List<Command> getQueuedCommands() {
 return currentCommands;
+}
+
+public void clearQueuedCommands() {
+commandQueue.clear();
 }

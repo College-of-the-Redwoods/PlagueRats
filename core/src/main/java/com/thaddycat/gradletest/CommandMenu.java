@@ -9,21 +9,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 public class CommandMenu extends Table {
-    public CommandMenu(Stage stage, Skin skin, float x, float y, Runnable onMove, Runnable onAttack) {
+    public CommandMenu(Stage stage, Skin skin, float x, float y, Runnable onMove, Runnable onAttack, Runnable onClose) {
         super(skin);
         setPosition(x, y);
         setBackground("default-round");
 
         Label label = new Label("Choose action:", skin);
-
-        TextButton moveButton = new TextButton("Move Here", skin);
-        TextButton attackButton = new TextButton("Attack Here", skin);
+        TextButton moveButton = new TextButton("Move", skin);
+        TextButton attackButton = new TextButton("Attack", skin);
 
         moveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 onMove.run();
-                remove(); // Close menu
+                onClose.run(); // Tell GameScreen we're done
             }
         });
 
@@ -31,10 +30,12 @@ public class CommandMenu extends Table {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 onAttack.run();
-                remove(); // Close menu
+                onClose.run(); // Tell GameScreen we're done
             }
         });
 
+        add(label).pad(5);
+        row();
         add(moveButton).pad(5);
         row();
         add(attackButton).pad(5);

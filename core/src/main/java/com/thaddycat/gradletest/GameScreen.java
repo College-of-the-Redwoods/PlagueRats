@@ -50,8 +50,6 @@ public class GameScreen implements Screen {
     private Texture dropTexture;
 
 
-
-
     public GameScreen() {
         shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera();
@@ -113,9 +111,6 @@ public class GameScreen implements Screen {
         }
     }
 
-
-
-
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -162,81 +157,89 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             game.executeStep();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
-            game.undoStep();
-        }
-        if (Gdx.input.justTouched()) {
-            int screenX = Gdx.input.getX();
-            int screenY = Gdx.input.getY();
+            for (Character c : characters) {
+                uiManager.updateCommandInfo(c, "No command selected");
+            }
 
-            // Convert screen to world coordinates
-            Vector2 worldCoords = stage.getViewport().unproject(new Vector2(screenX, screenY));
-            int clickedX = (int) (worldCoords.x / CELL_SIZE);
-            int clickedY = (int) (worldCoords.y / CELL_SIZE);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+                game.undoStep();
+            }
+            if (Gdx.input.justTouched()) {
+                int screenX = Gdx.input.getX();
+                int screenY = Gdx.input.getY();
 
-            System.out.println("Clicked cell at: " + clickedX + ", " + clickedY);
+                // Convert screen to world coordinates
+                Vector2 worldCoords = stage.getViewport().unproject(new Vector2(screenX, screenY));
+                int clickedX = (int) (worldCoords.x / CELL_SIZE);
+                int clickedY = (int) (worldCoords.y / CELL_SIZE);
 
-            Cell clickedCell = MapGenerator.getCellAt(clickedX, clickedY);
+                System.out.println("Clicked cell at: " + clickedX + ", " + clickedY);
 
-            if (clickedCell != null && uiManager.getSelectedCharacter() != null) {
-                // Show new CommandMenu at clicked cell
-                if (activeMenu != null) {
-                    activeMenu.remove();
-                }
+                Cell clickedCell = MapGenerator.getCellAt(clickedX, clickedY);
 
-                activeMenu = new CommandMenu(stage, skin, worldCoords.x, worldCoords.y,
-                    () -> {
-                        Character selected = uiManager.getSelectedCharacter();
-                        if (!clickedCell.isOccupied()) {
-                            MoveCommand move = new MoveCommand(selected, clickedCell);
-                            game.enqueueCommand(move);
-                            Sound moveSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-                            moveSound.play(0.25f);
-                        } else {
-                            System.out.println("Move failed: cell is occupied.");
-                        }
-
-                        activeMenu.remove();
-                        activeMenu = null;
-                    },
-                    () -> {
-                        Character selected = uiManager.getSelectedCharacter();
-
-                        // Find a character on the clicked cell (for now, assume it's the first one at that position)
-                        Character target = null;
-                        for (Character c : characters) {
-                            if (c.getPosition().getX() == clickedCell.getXPos() && c.getPosition().getY() == clickedCell.getYPos()) {
-                                target = c;
-                                break;
-                            }
-                        }
-
-                        if (target != null && target != selected) {
-                            AttackCommand attack = new AttackCommand(selected, target);
-                            game.enqueueCommand(attack);
-                            Sound attackSound = Gdx.audio.newSound(Gdx.files.internal("attack.mp3"));
-                            attackSound.play(0.25f);
-                            System.out.println("Attack command enqueued.");
-                        } else {
-                            System.out.println("Attack failed: no target found or trying to attack self.");
-                        }
-
-                        activeMenu.remove();
-                        activeMenu = null;
+                if (clickedCell != null && uiManager.getSelectedCharacter() != null) {
+                    // Show new CommandMenu at clicked cell
+                    if (activeMenu != null) {
+                        closeActiveMenu();
                     }
-                );
 
-            } else if (activeMenu != null) {
-                // Click was outside the grid — dismiss the menu
-                activeMenu.remove();
-                activeMenu = null;
+                    activeMenu = new CommandMenu(stage, skin, worldCoords.x, worldCoords.y,
+                        () -> {
+                            Character selected = uiManager.getSelectedCharacter();
+                            if (!clickedCell.isOccupied()) {
+                                MoveCommand move = new MoveCommand(selected, clickedCell);
+                                game.enqueueCommand(move);
+                                Sound moveSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
+                                moveSound.play(0.25f);
+                                uiManager.updateCommandInfo(selected, " queued: Move");
+                                activeMenu.remove(); // Add this
+                                activeMenu = null;
+                            } else {
+                                System.out.println("Move failed: cell is occupied.");
+                                activeMenu.remove();
+                                activeMenu = null;
+                            }
+                        },
+                        () -> {
+                            Character selected = uiManager.getSelectedCharacter();
+
+                            Character target = null;
+                            for (Character c : characters) {
+                                if (c.getPosition().getX() == clickedCell.getXPos() && c.getPosition().getY() == clickedCell.getYPos()) {
+                                    target = c;
+                                    break;
+                                }
+                            }
+
+                            if (target != null && target != selected) {
+                                AttackCommand attack = new AttackCommand(selected, target);
+                                game.enqueueCommand(attack);
+                                Sound attackSound = Gdx.audio.newSound(Gdx.files.internal("attack.mp3"));
+                                attackSound.play(0.25f);
+                                System.out.println("Attack command enqueued.");
+                                uiManager.updateCommandInfo(selected, " queued: Attack " + target.getName());
+                                activeMenu.remove(); // Add this
+                                activeMenu = null;
+                            } else {
+                                System.out.println("Attack failed: no target found or trying to attack self.");
+                                activeMenu.remove();
+                                activeMenu = null;
+                            }
+                        },
+                        () -> {
+                            // Cleanup logic when the menu is closed
+                            activeMenu = null;
+                        }
+                    );
+                } else if (activeMenu != null) {
+                    // Click was outside the grid — dismiss the menu
+                    closeActiveMenu();
+                }
             }
         }
-            stage.act(delta);
+        stage.act(delta);
         stage.draw();
     }
-
     @Override public void show() {}
 
     @Override public void resize(int width, int height) {
@@ -246,6 +249,13 @@ public class GameScreen implements Screen {
         stage.getViewport().setCamera(camera);
 
 
+    }
+
+    private void closeActiveMenu() {
+        if (activeMenu != null) {
+            activeMenu.remove();
+            activeMenu = null;
+        }
     }
 
     @Override public void pause() {}

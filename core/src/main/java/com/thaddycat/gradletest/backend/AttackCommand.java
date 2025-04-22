@@ -1,5 +1,8 @@
 package com.thaddycat.gradletest.backend;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+
 public class AttackCommand implements Command {
     private final Character attacker;
     private Character defender;
@@ -21,6 +24,8 @@ public class AttackCommand implements Command {
             this.previousHP = defenderResourcePoints.getHp();
             int newHP = this.previousHP - 10; // Placeholder calculation
             System.out.println(this.defender.getName() + "'s health has dropped from " + this.previousHP + " down to " + newHP);
+            Sound attackSound = Gdx.audio.newSound(Gdx.files.internal("attack.mp3"));
+            attackSound.play(1.0f);
             if (newHP <= 0) {
                 System.out.println(this.defender.getName() + " is dead!");
                 // Death logic
