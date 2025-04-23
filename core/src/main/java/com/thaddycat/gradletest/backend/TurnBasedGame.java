@@ -1,8 +1,11 @@
 package com.thaddycat.gradletest.backend;
 
+import com.badlogic.gdx.Game;
+import com.thaddycat.gradletest.GameScreen;
+
 import java.util.List;
 
-public class TurnBasedGame {
+public class TurnBasedGame extends Game {
 
     public TurnBasedGame() {
         MapGenerator.generateCellArray(5, 5);
@@ -65,4 +68,8 @@ public class TurnBasedGame {
     }
 
 
+    @Override
+    public void create() {
+        this.setScreen(new GameScreen());
+    }
 }

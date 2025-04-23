@@ -16,7 +16,6 @@ import java.util.List;
 public class UIManager {
     private Stage stage;
     private Character selectedCharacter;
-    private List<Character> characters;
     private Label commandInfoLabel;
     private Table rootTable;
     private Label johnCommandLabel;
@@ -28,7 +27,6 @@ public class UIManager {
     public UIManager(TurnBasedGame game, List<Character> characters) {
         stage = new Stage();
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        this.characters = characters;
         rootTable = new Table();
         rootTable.top().left();
         rootTable.setFillParent(true);
@@ -46,10 +44,6 @@ public class UIManager {
         rootTable.add(commandInfoLabel).colspan(2).padTop(10).left();
 
         stage.addActor(rootTable);
-
-        for (Character c : characters) {
-            // ...
-        }
 
 
         selectJohn.addListener(new ClickListener() {
