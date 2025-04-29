@@ -3,11 +3,11 @@ package io.github.CR.PlagueRats.backend;
 import com.badlogic.gdx.Gdx;
 
 public class MoveCommand implements Command {
-    private final GameCharacter character;
+    private final AbstractCharacter character;
     private Cell nextCell, previousCell;
     private boolean executed;
 
-    public MoveCommand(GameCharacter character, Cell nextCell) {
+    public MoveCommand(AbstractCharacter character, Cell nextCell) {
         this.character = character;
         this.nextCell = nextCell;
         previousCell = MapGenerator.getCellAt(character.getPosition().x, character.getPosition().y);

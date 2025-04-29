@@ -32,12 +32,12 @@ public class CommandRenderer {
             if (cmd instanceof MoveCommand m) {
                 Cell t = m.getTarget();
                 if (t != null) {
-                    GameCharacter c = m.getCharacter();
+                    AbstractCharacter c = m.getCharacter();
                     batch.setColor(c.getName().contains("Jane")?1:0.3f,0,0,1);
                     batch.draw(dropTex, t.getPosition().x*cellSize, t.getPosition().y*cellSize, cellSize, cellSize);
                 }
             } else if (cmd instanceof AttackCommand a) {
-                GameCharacter c = a.getAttacker();
+                AbstractCharacter c = a.getAttacker();
                 Cell t = a.getTarget().getPosition()!=null? MapGenerator.getCellAt(a.getTarget().getPosition().getX(), a.getTarget().getPosition().getY()):null;
                 if (t!=null) {
                     batch.setColor(Color.WHITE);

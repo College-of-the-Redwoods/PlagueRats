@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CharacterGenerator {
     // Load character from .txt file
-    public static GameCharacter loadFromFile(String filePath) throws IOException {
+    public static AbstractCharacter loadFromFile(String filePath) throws IOException {
         boolean isPC = false;
         String name = "";
         ResourcePoints resourcePoints = new ResourcePoints();
@@ -60,7 +60,7 @@ public class CharacterGenerator {
         }
 
         // Create PC/NPC based on the "PC" flag
-        GameCharacter character = isPC ?
+        AbstractCharacter character = isPC ?
             new PCCharacter(name, position, resourcePoints) :
             new NPCCharacter(name, position, resourcePoints);
 
@@ -69,7 +69,7 @@ public class CharacterGenerator {
     }
 
     // Save character to .txt file
-    public static void saveToFile(GameCharacter character, String filePath) throws IOException {
+    public static void saveToFile(AbstractCharacter character, String filePath) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("PC: " + (character instanceof PCCharacter)); // Detect PC/NPC
             writer.newLine();
@@ -92,7 +92,7 @@ public class CharacterGenerator {
     }
 
     public static void saveCharacters() {
-        for (GameCharacter c : GameCharacter.getCharacterArrayList()) {
+        for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
             try {
                 CharacterGenerator.saveToFile(c, "saves/" + c.getName() + "_save.txt");
                 System.out.println("Saved: " + c.getName());
@@ -115,7 +115,7 @@ public class CharacterGenerator {
         for (File file : saveFiles) {
             try {
                 System.out.println("Loading next character...");
-                GameCharacter loadedChar = CharacterGenerator.loadFromFile(file.getPath());
+                AbstractCharacter loadedChar = CharacterGenerator.loadFromFile(file.getPath());
                 System.out.println("Loaded: " + loadedChar.getName() + ". \n");
             } catch (IOException e) {
                 System.err.println("Failed to load " + file.getName() + ": " + e.getMessage());

@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class CharacterRenderer {
     private final SpriteBatch batch;
-    private final List<GameCharacter> characters;
+    private final List<AbstractCharacter> characters;
     private final int cellSize;
     private final SpriteInterface spriteInterface;
     private final Map<String, Texture> textures = new HashMap<>();
 
     public CharacterRenderer(SpriteBatch batch,
-                             List<GameCharacter> characters,
+                             List<AbstractCharacter> characters,
                              int cellSize,
                              SpriteInterface spriteInterface) {
         this.batch = batch;
@@ -29,7 +29,7 @@ public class CharacterRenderer {
     public void render(OrthographicCamera cam) {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
-        for (GameCharacter c : characters) {
+        for (AbstractCharacter c : characters) {
             String path = spriteInterface.getSpritePath(c);
             Texture tex = textures.computeIfAbsent(path, p -> new Texture(p));
             Position p = c.getPosition();

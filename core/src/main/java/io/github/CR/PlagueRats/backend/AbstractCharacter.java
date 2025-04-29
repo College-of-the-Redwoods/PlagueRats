@@ -3,15 +3,15 @@ package io.github.CR.PlagueRats.backend;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GameCharacter {
-    private static final List<GameCharacter> characterArrayList = new ArrayList<>();
+public abstract class AbstractCharacter {
+    private static final List<AbstractCharacter> characterArrayList = new ArrayList<>();
     private final List<String> inventory = new ArrayList<>();
     private final CommandManager commandManager;
     private final ResourcePoints resourcePoints;
     private final Position position;
     private String name;
 
-    public GameCharacter(String name, Position position, ResourcePoints resourcePoints) {
+    public AbstractCharacter(String name, Position position, ResourcePoints resourcePoints) {
         this.name = name;
         this.position = position;
         this.resourcePoints = resourcePoints;
@@ -19,7 +19,7 @@ public abstract class GameCharacter {
         characterArrayList.add(this);
     }
 
-    public static List<GameCharacter> getCharacterArrayList() { return characterArrayList; }
+    public static List<AbstractCharacter> getCharacterArrayList() { return characterArrayList; }
 
     public CommandManager getCommandManager() { return commandManager; }
 

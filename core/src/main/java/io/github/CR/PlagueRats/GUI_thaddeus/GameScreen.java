@@ -43,7 +43,7 @@ public class GameScreen implements Screen {
 
         // - grab data lists
         List<Cell> cells = MapGenerator.getCellArray();
-        List<GameCharacter> characters = CharacterManager.getInstance().getCharacterArrayList();
+        List<AbstractCharacter> characters = AbstractCharacter.getCharacterArrayList();
 
         // — instantiate helper classes
         UIManager uiManager = new UIManager(gameStage, skin);

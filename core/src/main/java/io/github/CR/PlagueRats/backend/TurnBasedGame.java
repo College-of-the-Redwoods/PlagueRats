@@ -12,7 +12,7 @@ public class TurnBasedGame extends Game {
 
     public void executeStep() {
         System.out.println("Executing Game Step...");
-        for (GameCharacter c : GameCharacter.getCharacterArrayList()) {
+        for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
             System.out.println("Executing CommandManager for " + c.getName());
             c.getCommandManager().execute();
         }
@@ -21,7 +21,7 @@ public class TurnBasedGame extends Game {
 
     public void undoStep() {
         System.out.println("Undoing Game Step");
-        for (GameCharacter c : GameCharacter.getCharacterArrayList()) {
+        for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
             System.out.println(c.getName() + " undoing CommandManager");
             c.getCommandManager().undo();
         }

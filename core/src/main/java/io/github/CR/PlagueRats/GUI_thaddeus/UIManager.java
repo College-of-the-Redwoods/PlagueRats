@@ -1,12 +1,12 @@
 package io.github.CR.PlagueRats.GUI_thaddeus;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.thaddycat.gradletest.backend.GameCharacter;
+import io.github.CR.PlagueRats.backend.*;
 
 
 public class UIManager {
     private final StatsPanel statsPanel;
-    private GameCharacter selectedCharacter;
+    private AbstractCharacter selectedCharacter;
     private final GameStage gameStage;
 
     public UIManager(GameStage gameStage, Skin skin) {
@@ -15,11 +15,11 @@ public class UIManager {
         gameStage.addActor(statsPanel);
         statsPanel.update(null, null); // or however you clear it
     }
-    public void setSelectedCharacter(GameCharacter character) {
+    public void setSelectedCharacter(AbstractCharacter character) {
         this.selectedCharacter = character;
         statsPanel.update(character, "N/A");
     }
-    public GameCharacter getSelectedCharacter() {
+    public AbstractCharacter getSelectedCharacter() {
         return selectedCharacter;
     }
 
@@ -32,10 +32,10 @@ public class UIManager {
         return statsPanel;
     }
 
-    public void updateCommandInfo(GameCharacter character, String info) {
+    public void updateCommandInfo(AbstractCharacter character, String info) {
         statsPanel.update(selectedCharacter, "N/A");
     }
-    public void updateCommandText(GameCharacter character, String text) {
+    public void updateCommandText(AbstractCharacter character, String text) {
         // update a label or internal state here
     }
 }
