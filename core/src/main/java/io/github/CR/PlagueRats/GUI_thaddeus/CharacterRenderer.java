@@ -13,13 +13,13 @@ public class CharacterRenderer {
     private final SpriteBatch batch;
     private final List<AbstractCharacter> characters;
     private final int cellSize;
-    private final SpriteInterface spriteInterface;
+    private final SpriteProvider spriteInterface;
     private final Map<String, Texture> textures = new HashMap<>();
 
     public CharacterRenderer(SpriteBatch batch,
                              List<AbstractCharacter> characters,
                              int cellSize,
-                             SpriteInterface spriteInterface) {
+                             SpriteProvider spriteInterface) {
         this.batch = batch;
         this.characters = characters;
         this.cellSize = cellSize;
@@ -31,7 +31,7 @@ public class CharacterRenderer {
         batch.begin();
         for (AbstractCharacter c : characters) {
             String path = spriteInterface.getSpritePath(c);
-            Texture tex = textures.computeIfAbsent(path, p -> new Texture(p));
+            Texture tex = textures.computeIfAbsent(path,Texture::new);
             Position p = c.getPosition();
             Cell cell = MapGenerator.getCellAt(p.x, p.y);
             batch.draw(c.getTexture(), p.x*cellSize, p.y*cellSize, cellSize, cellSize);

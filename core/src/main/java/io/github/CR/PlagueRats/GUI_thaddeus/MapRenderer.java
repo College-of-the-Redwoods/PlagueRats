@@ -2,7 +2,8 @@ package io.github.CR.PlagueRats.GUI_thaddeus;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.thaddycat.gradletest.backend.Cell;
+import io.github.CR.PlagueRats.backend.Cell
+import io.github.CR.PlagueRats.backend.Position;
 
 import java.util.List;
 
@@ -20,16 +21,18 @@ public class MapRenderer {
     public void render(OrthographicCamera cam) {
         shapes.setProjectionMatrix(cam.combined);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
+        shapes.setColor(0.6f,0.6f,0.6f,1);
         for (Cell cell : cells) {
-            shapes.setColor(0.6f,0.6f,0.6f,1);
-            shapes.rect(cell.getXPos()*cellSize, cell.getYPos()*cellSize, cellSize, cellSize);
+            Position cPos = cell.getPosition();
+            shapes.rect(cPos.x*cellSize, cPos.y*cellSize, cellSize, cellSize);
         }
         shapes.end();
 
         shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(0,0,0,1);
         for (Cell cell : cells) {
-            shapes.rect(cell.getXPos()*cellSize, cell.getYPos()*cellSize, cellSize, cellSize);
+            Position cPos = cell.getPosition();
+            shapes.rect(cPos.x*cellSize, cPos.y*cellSize, cellSize, cellSize);
         }
         shapes.end();
     }

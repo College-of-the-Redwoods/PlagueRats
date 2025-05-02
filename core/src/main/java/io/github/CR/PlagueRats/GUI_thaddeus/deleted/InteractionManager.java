@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+/*package io.github.CR.PlagueRats.GUI_thaddeus;
 
 // Centralizes routing of clicks
 
@@ -15,3 +15,4 @@ public class InteractionManager {
         gameWorldInteractor.handleWorldClick(worldCoords);
     }
 }
+*/

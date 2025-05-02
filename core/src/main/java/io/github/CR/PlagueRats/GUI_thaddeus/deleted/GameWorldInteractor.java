@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+/*package io.github.CR.PlagueRats.GUI_thaddeus;
 
 import com.badlogic.gdx.math.Vector2;
 import com.thaddycat.gradletest.backend.GameCharacter;
@@ -6,7 +6,7 @@ import com.thaddycat.gradletest.backend.GameCharacter;
 //ask chatGPT if we can make a better name
 // Handles character/map interactions, delegated from InteractionManager
 
-/** Handles world‐clicks (map or character selection). */
+// Handles world‐clicks (map or character selection).
 public class GameWorldInteractor {
     private final CharacterManager characterManager;
 
@@ -25,3 +25,4 @@ public class GameWorldInteractor {
         }
     }
 }
+*/

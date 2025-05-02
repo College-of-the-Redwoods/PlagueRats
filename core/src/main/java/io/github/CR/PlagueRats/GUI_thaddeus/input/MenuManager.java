@@ -1,6 +1,8 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+package io.github.CR.PlagueRats.GUI_thaddeus.input;
 
 // Handles UIWindow instances, auto-hides on show
+
+import io.github.CR.PlagueRats.GUI_thaddeus.UIWindow;
 
 import java.util.ArrayList;
 import java.util.List;

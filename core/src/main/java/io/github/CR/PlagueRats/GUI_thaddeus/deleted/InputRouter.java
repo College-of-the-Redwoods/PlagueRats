@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+/*package io.github.CR.PlagueRats.GUI_thaddeus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -36,3 +36,4 @@ public class InputRouter extends InputAdapter {
         }
     }
 }
+*/

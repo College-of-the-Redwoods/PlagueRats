@@ -7,61 +7,79 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.CR.PlagueRats.GUI_thaddeus.input.*;
 import io.github.CR.PlagueRats.backend.*;
 
 import java.util.List;
 
 public class GameScreen implements Screen {
     private static final int CELL_SIZE = 40;
-    private final OrthographicCamera camera;
-    private final SpriteBatch batch;
-    private final InputRouter inputRouter;
-    private final MapRenderer mapRenderer;
-    private final CharacterRenderer charRenderer;
-    private final CommandRenderer cmdRenderer;
-    private final GameStage gameStage;
 
-    public GameScreen(TurnBasedGame game) {
+    private final OrthographicCamera  camera;
+    private final SpriteBatch         batch;
+    private final MapRenderer         mapRenderer;
+    private final CharacterRenderer   charRenderer;
+    private final CommandRenderer     cmdRenderer;
+
+    private GameStage gameStage;
+    private UIManager uiManager;
+
+    public GameScreen() {
         // — camera & wrappers
         camera = new OrthographicCamera(800, 500);
         camera.position.set(400, 250, 0);
         camera.update();
         CameraWrapper cameraWrapper = new CameraWrapper(camera);
-        batch = new SpriteBatch();
-
+        batch   = new SpriteBatch();
         // - skin,
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-
-        // - menuManager & interactor
+        // - menuManager
         MenuManager menuManager = new MenuManager();
-        GameWorldInteractor interactor = new GameWorldInteractor(CharacterManager.getInstance());
-        InteractionManager interactionManager = new InteractionManager(interactor);
-
-        // - stage
-        gameStage = new GameStage(cameraWrapper, menuManager, interactionManager, skin);
-        Gdx.input.setInputProcessor(gameStage);
-
-        // - grab data lists
-        List<Cell> cells = MapGenerator.getCellArray();
-        List<AbstractCharacter> characters = AbstractCharacter.getCharacterArrayList();
-
-        // — instantiate helper classes
-        UIManager uiManager = new UIManager(gameStage, skin);
-        Gdx.input.setInputProcessor(gameStage);
-        inputRouter  = new InputRouter(gameStage,
-            new InteractionManager(new GameWorldInteractor(CharacterManager.getInstance())),
-            cameraWrapper
-        );
+        // — Load & register characters and map
+        MapGenerator.generateCellArray(5, 5); // sets up internal state
+        CharacterGenerator.loadCharacters();
+        List<Cell> cells = MapGenerator.getCellArray();        // now grab the list
+        List<AbstractCharacter> characters = CharacterManager.getInstance().getCharacterArrayList();
+        // -- render map
         mapRenderer  = new MapRenderer(cells, CELL_SIZE);
-        cmdRenderer  = new CommandRenderer(batch,
-            new Texture("drop.png"),
-            new Texture("sword_blue.png"),
-            new Texture("sword_pink.png"),
-            CELL_SIZE);
+        // --render planned commands
 
-        // - sprites
-        SpriteInterface spriteInterface = new DefaultSpriteProvider();
-        charRenderer = new CharacterRenderer(batch, characters, CELL_SIZE, spriteInterface);
+        Texture moveIcon = new Texture("drop.png");
+        Texture attackIcon = new Texture("sword_blue.png");
+        cmdRenderer  = new CommandRenderer(batch,
+            moveIcon,
+            attackIcon,
+            CELL_SIZE);
+        // - render sprites
+        charRenderer = new CharacterRenderer(batch, characters, CELL_SIZE, new DefaultSpriteProvider());
+        // build each input handler
+        // 1) Stage/UI
+        this.gameStage = new GameStage(cameraWrapper, menuManager, skin);
+        // 2) world‐click interactor
+        CommandMenuOpener commandMenu = new CommandMenuOpener(cameraWrapper,CharacterManager.getInstance(),uiManager, gameStage, skin, CELL_SIZE);
+        // 3) UI facade
+        this.uiManager = new UIManager(gameStage, skin);
+        // 4) character selector
+        CharacterSelector selector  = new CharacterSelector(cameraWrapper,
+            CharacterManager.getInstance(),
+            uiManager, CELL_SIZE, commandMenu);
+        // 5) global keys handler
+        GlobalKeyHandler keys      = new GlobalKeyHandler();
+        // build the input multiplexer and register in desired order:
+        InputMuxBuilder builder = new InputMuxBuilder();
+        // 1 + 2 → UI layer               (Stage + raw UI)
+        builder.addUIProcessor(gameStage);
+        builder.addUIProcessor(uiManager);      // optional, only if UIManager implements InputProcessor
+        //  gameplay interactions  (selection + commands)
+        // 3) selecting PCs
+        builder.addGameplayProcessor(selector);
+        // 4) moves & attacks
+        builder.addGameplayProcessor(commandMenu);
+        // 5 → global keys & fallback
+        builder.addGlobalProcessor(keys);
+        // e) Finally catch-all fallback handler, if you have one
+        //  builder.addGlobalProcessor(otherHandler);
+        Gdx.input.setInputProcessor(builder.build());
     }
 
     @Override
@@ -73,11 +91,6 @@ public class GameScreen implements Screen {
         mapRenderer.render(camera);
         charRenderer.render(camera);
         cmdRenderer.render(camera, GameController.INSTANCE.getQueue());
-        gameStage.act(delta);
-        gameStage.draw();
-
-        inputRouter.update();
-
         gameStage.act(delta);
         gameStage.draw();
     }

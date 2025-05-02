@@ -1,17 +1,16 @@
 package io.github.CR.PlagueRats.GUI_thaddeus;
 
-import com.thaddycat.gradletest.backend.GameCharacter;
-import com.thaddycat.gradletest.backend.NPCCharacter;
-import com.thaddycat.gradletest.backend.PCCharacter;
 
-public class DefaultSpriteProvider implements SpriteInterface {
+import io.github.CR.PlagueRats.backend.AbstractCharacter;
+import io.github.CR.PlagueRats.backend.NPCCharacter;
+import io.github.CR.PlagueRats.backend.PCCharacter;
+
+public class DefaultSpriteProvider implements SpriteProvider {
     @Override
-    public String getSpritePath(GameCharacter character) {
+    public String getSpritePath(AbstractCharacter character) {
         // if you ever store a custom sprite path on the character, use that,
 
-        if (character.getSpritePath() != null && !character.getSpritePath().isEmpty()) {
-            return character.getSpritePath();          // e.g. "sprites/bob.png"
-        }
+
         // // otherwise fall back to a type-based defaults:
         if (character instanceof PCCharacter) {
             return "john.png";

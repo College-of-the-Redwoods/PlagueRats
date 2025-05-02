@@ -3,46 +3,29 @@ package io.github.CR.PlagueRats.GUI_thaddeus;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.thaddycat.gradletest.backend.GameCharacter;
+import io.github.CR.PlagueRats.backend.AbstractCharacter;
+import io.github.CR.PlagueRats.backend.ResourcePoints;
 
 public class StatsPanel extends Table {
-    private final Label nameLabel;
-    private final Label hpLabel;
-    private final Label commandLabel;
-
+    private final Skin skin;
 
     public StatsPanel(Skin skin) {
         super();
-        nameLabel = new Label("Name: N/A", skin);
-        hpLabel = new Label("HP: N/A", skin);
-        commandLabel = new Label("Queued: N/A", skin);
-
-        this.top().left();
-        this.add(commandLabel).left().row();
-        this.add(nameLabel).left().row();
-        this.add(hpLabel).left().row();
+        this.skin = skin;
+        top().left();
     }
 
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        // add logic to hide/show actual UI elements if needed
-    }
+    /** Updates the labels completely. Always creates fresh ones. */
+    public void update(AbstractCharacter c, String queuedCommand) {
+        clearChildren(); // wipe everything
 
-    public void updateCommandText(GameCharacter character) {
-        if (character != null) {
-            nameLabel.setText("Name: " + character.getName());
-            hpLabel.setText("HP: " + character.getHp() + "/" + character.getMaxHp());
+        if (c != null) {
+            add(new Label("Queued: " + (queuedCommand != null ? queuedCommand : "N/A"), skin)).left().row();
+            add(new Label("Name: " + c.getName(), skin)).left().row();
+            add(new Label("HP: " + c.getResourcePoints().getHp(), skin)).left().row();
         } else {
-            nameLabel.setText("Name: N/A");
-            hpLabel.setText("HP: N/A");
+            // optionally don't show anything at all if nothing is selected
+            // (or add blank labels if you want consistent height)
         }
     }
-    public void update(GameCharacter c, String queuedCommand) {
-        nameLabel.setText(c==null ? "Name: N/A" : "Name: "+c.getName());
-        hpLabel.  setText(c==null ? "HP: N/A"   : "HP: "+c.getHp()+"/"+c.getMaxHp());
-        commandLabel.setText("Queued: "+(queuedCommand==null ? "N/A" : queuedCommand));
-    }
 }
-
-

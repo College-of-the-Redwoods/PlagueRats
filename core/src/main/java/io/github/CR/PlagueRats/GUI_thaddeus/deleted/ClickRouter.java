@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+/*package io.github.CR.PlagueRats.GUI_thaddeus;
 
 
 // For deciding if a click was on UI, map, or character
@@ -14,3 +14,4 @@ public class ClickRouter {
         return gameStage.getViewport().getCamera().viewportWidth < x;
     }
 }
+*/

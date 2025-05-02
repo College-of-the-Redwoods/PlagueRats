@@ -1,7 +1,9 @@
 package io.github.CR.PlagueRats.GUI_thaddeus;
 
-import com.thaddycat.gradletest.backend.Command;
-import com.thaddycat.gradletest.backend.TurnBasedGame;
+
+
+import io.github.CR.PlagueRats.backend.Command;
+import io.github.CR.PlagueRats.backend.TurnBasedGame;
 
 import java.util.List;
 

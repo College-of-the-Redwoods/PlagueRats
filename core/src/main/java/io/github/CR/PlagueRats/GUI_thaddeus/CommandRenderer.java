@@ -8,21 +8,24 @@ import io.github.CR.PlagueRats.backend.*;
 
 import java.util.List;
 
+
+//the command dont know the target get from the input class(front end)
+
+
 public class CommandRenderer {
     private final SpriteBatch batch;
-    private final Texture dropTex;
-    private final Texture swordBlue;
-    private final Texture swordPink;
+    private final Texture moveIcon;
+    private final Texture attackIcon;
     private final int cellSize;
 
     public CommandRenderer(SpriteBatch batch,
-                           Texture dropTex, Texture swordBlue, Texture swordPink,
+                           Texture moveIcon,
+                           Texture attackIcon,
                            int cellSize) {
-        this.batch      = batch;
-        this.dropTex    = dropTex;
-        this.swordBlue  = swordBlue;
-        this.swordPink  = swordPink;
-        this.cellSize   = cellSize;
+        this.batch       = batch;
+        this.moveIcon    = moveIcon;
+        this.attackIcon  = attackIcon;
+        this.cellSize    = cellSize;
     }
 
     public void render(OrthographicCamera cam, List<Command> queue) {
@@ -30,30 +33,40 @@ public class CommandRenderer {
         batch.begin();
         for (Command cmd : queue) {
             if (cmd instanceof MoveCommand m) {
-                Cell t = m.getTarget();
-                if (t != null) {
-                    AbstractCharacter c = m.getCharacter();
-                    batch.setColor(c.getName().contains("Jane")?1:0.3f,0,0,1);
-                    batch.draw(dropTex, t.getPosition().x*cellSize, t.getPosition().y*cellSize, cellSize, cellSize);
+                MoveCommand m = (MoveCommand) cmd;
+                Cell targetCell = m.getTarget();
+                if (targetCell != null) {
+                    batch.draw(
+                        moveIcon,
+                        targetCell.getPosition().x * cellSize,
+                        targetCell.getPosition().y * cellSize,
+                        cellSize, cellSize
+                    );
                 }
-            } else if (cmd instanceof AttackCommand a) {
-                AbstractCharacter c = a.getAttacker();
-                Cell t = a.getTarget().getPosition()!=null? MapGenerator.getCellAt(a.getTarget().getPosition().getX(), a.getTarget().getPosition().getY()):null;
-                if (t!=null) {
-                    batch.setColor(Color.WHITE);
-                    batch.draw(c.getName().contains("John")?swordBlue:swordPink,
-                        t.getPosition().x*cellSize, t.getPosition().y*cellSize, cellSize, cellSize);
+            } else if (cmd instanceof AttackCommand) {
+                AttackCommand a = (AttackCommand) cmd;
+                AbstractCharacter defender = a.getTarget();
+                if (defender != null) {
+                    Cell cell = MapGenerator.getCellAt(
+                        defender.getPosition().getX(),
+                        defender.getPosition().getY()
+                    );
+                    if (cell != null) {
+                        batch.draw(
+                            attackIcon,
+                            cell.getPosX() * cellSize,
+                            cell.getYPos() * cellSize,
+                            cellSize, cellSize
+                        );
+                    }
                 }
             }
         }
-        batch.setColor(Color.WHITE);
         batch.end();
     }
 
     public void dispose() {
-        dropTex.dispose();
-        swordBlue.dispose();
-        swordPink.dispose();
+        moveIcon.dispose();
+        attackIcon.dispose();
     }
 }
-

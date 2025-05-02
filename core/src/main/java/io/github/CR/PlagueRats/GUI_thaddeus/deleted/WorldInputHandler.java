@@ -1,6 +1,7 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+/*package io.github.CR.PlagueRats.GUI_thaddeus;
 
-public interface UIInputHandler {
+public interface WorldInputHandler {
     boolean handleKey(int keycode);
     boolean handleTouch(int x, int y, int button);
 }
+*/
