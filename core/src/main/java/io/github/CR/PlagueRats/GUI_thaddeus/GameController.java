@@ -14,12 +14,12 @@ public enum GameController {
 
     // enqueue & execute a Move
     public void move(AbstractCharacter who, Cell where) {
-        commands.addCommand(new MoveCommand(who, where));
+        who.getCommandManager().addCommand(new MoveCommand(who, where));
     }
 
     // enqueue & execute an Attack
     public void attack(AbstractCharacter who, AbstractCharacter target) {
-        commands.addCommand(new AttackCommand(who, target));
+        who.getCommandManager().addCommand(new AttackCommand(who, target));
     }
 
     public void step() {

@@ -1,5 +1,7 @@
 package io.github.CR.PlagueRats.GUI_thaddeus.input;
 
+//test
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -45,7 +47,7 @@ public class CharacterSelector extends InputAdapter {
                 screenX, screenY, world.x, world.y, cellX, cellY));
 
         // find the PC at that cell (or null)
-        AbstractCharacter clicked = findPCAt(cellX, cellY);
+        AbstractCharacter clicked = getCharacterAt(cellX, cellY);
 
         if (clicked == null) {
             // nothing or NPC there → clear selection
@@ -60,11 +62,11 @@ public class CharacterSelector extends InputAdapter {
         return true;     // consumed
     }
 
-    /** Helper: returns the PC at (x,y), or null if empty/NPC. */
-    private AbstractCharacter findPCAt(int cellX, int cellY) {
+    /// Helper: returns the Character at (x,y)
+    public AbstractCharacter getCharacterAt(int cellX, int cellY) {
         for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
             Position p = c.getPosition();
-            if (p.x == cellX && p.y == cellY && c instanceof PCCharacter) {
+            if (p.x == cellX && p.y == cellY) {
                 return c;
             }
         }
