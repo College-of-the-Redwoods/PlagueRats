@@ -33,8 +33,7 @@ public class CharacterRenderer {
             String path = spriteInterface.getSpritePath(c);
             Texture tex = textures.computeIfAbsent(path,Texture::new);
             Position p = c.getPosition();
-            Cell cell = MapGenerator.getCellAt(p.x, p.y);
-            batch.draw(c.getTexture(), p.x*cellSize, p.y*cellSize, cellSize, cellSize);
+            batch.draw(tex, p.x*cellSize, p.y*cellSize, cellSize, cellSize);
         }
         batch.end();
     }

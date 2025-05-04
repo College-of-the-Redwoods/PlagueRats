@@ -13,6 +13,7 @@ import io.github.CR.PlagueRats.backend.*;
 import java.util.List;
 
 public class GameScreen implements Screen {
+
     private static final int CELL_SIZE = 40;
 
     private final OrthographicCamera  camera;
@@ -24,7 +25,7 @@ public class GameScreen implements Screen {
     private GameStage gameStage;
     private UIManager uiManager;
 
-    public GameScreen() {
+    public GameScreen(TurnBasedGame turnBasedGame) {
         // — camera & wrappers
         camera = new OrthographicCamera(800, 500);
         camera.position.set(400, 250, 0);
@@ -39,7 +40,7 @@ public class GameScreen implements Screen {
         MapGenerator.generateCellArray(5, 5); // sets up internal state
         CharacterGenerator.loadCharacters();
         List<Cell> cells = MapGenerator.getCellArray();        // now grab the list
-        List<AbstractCharacter> characters = CharacterManager.getInstance().getCharacterArrayList();
+        List<AbstractCharacter> characters = AbstractCharacter.getCharacterArrayList();
         // -- render map
         mapRenderer  = new MapRenderer(cells, CELL_SIZE);
         // --render planned commands
@@ -55,16 +56,26 @@ public class GameScreen implements Screen {
         // build each input handler
         // 1) Stage/UI
         this.gameStage = new GameStage(cameraWrapper, menuManager, skin);
-        // 2) world‐click interactor
-        CommandMenuOpener commandMenu = new CommandMenuOpener(cameraWrapper,CharacterManager.getInstance(),uiManager, gameStage, skin, CELL_SIZE);
-        // 3) UI facade
+        // 2) UI facade
         this.uiManager = new UIManager(gameStage, skin);
-        // 4) character selector
-        CharacterSelector selector  = new CharacterSelector(cameraWrapper,
-            CharacterManager.getInstance(),
-            uiManager, CELL_SIZE, commandMenu);
+        // 3) character selector
+        CharacterSelector selector  =  new CharacterSelector(cameraWrapper,
+            uiManager,
+            CELL_SIZE,
+            null);
+
+        // 4) Command-menu
+        CommandMenuOpener opener = new CommandMenuOpener(cameraWrapper,
+            selector,
+            uiManager,
+            gameStage,
+            skin,
+            CELL_SIZE);
+
+        selector.setMenuOpener(opener);
+
         // 5) global keys handler
-        GlobalKeyHandler keys      = new GlobalKeyHandler();
+        GlobalKeyHandler keys = new GlobalKeyHandler();
         // build the input multiplexer and register in desired order:
         InputMuxBuilder builder = new InputMuxBuilder();
         // 1 + 2 → UI layer               (Stage + raw UI)
@@ -74,7 +85,7 @@ public class GameScreen implements Screen {
         // 3) selecting PCs
         builder.addGameplayProcessor(selector);
         // 4) moves & attacks
-        builder.addGameplayProcessor(commandMenu);
+        builder.addGameplayProcessor(opener);
         // 5 → global keys & fallback
         builder.addGlobalProcessor(keys);
         // e) Finally catch-all fallback handler, if you have one
@@ -90,7 +101,7 @@ public class GameScreen implements Screen {
         camera.update();
         mapRenderer.render(camera);
         charRenderer.render(camera);
-        cmdRenderer.render(camera, GameController.INSTANCE.getQueue());
+        cmdRenderer.render(camera, uiManager.getQueuedCommands());
         gameStage.act(delta);
         gameStage.draw();
     }

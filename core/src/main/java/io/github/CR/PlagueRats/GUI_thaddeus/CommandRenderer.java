@@ -1,16 +1,10 @@
 package io.github.CR.PlagueRats.GUI_thaddeus;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import io.github.CR.PlagueRats.backend.*;
 
 import java.util.List;
-
-
-//the command dont know the target get from the input class(front end)
-
 
 public class CommandRenderer {
     private final SpriteBatch batch;
@@ -27,44 +21,25 @@ public class CommandRenderer {
         this.attackIcon  = attackIcon;
         this.cellSize    = cellSize;
     }
-
-    public void render(OrthographicCamera cam, List<Command> queue) {
+    public void render(OrthographicCamera cam, List<CommandRecord> records) {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
-        for (Command cmd : queue) {
-            if (cmd instanceof MoveCommand m) {
-                MoveCommand m = (MoveCommand) cmd;
-                Cell targetCell = m.getTarget();
-                if (targetCell != null) {
-                    batch.draw(
-                        moveIcon,
-                        targetCell.getPosition().x * cellSize,
-                        targetCell.getPosition().y * cellSize,
-                        cellSize, cellSize
-                    );
-                }
-            } else if (cmd instanceof AttackCommand) {
-                AttackCommand a = (AttackCommand) cmd;
-                AbstractCharacter defender = a.getTarget();
-                if (defender != null) {
-                    Cell cell = MapGenerator.getCellAt(
-                        defender.getPosition().getX(),
-                        defender.getPosition().getY()
-                    );
-                    if (cell != null) {
-                        batch.draw(
-                            attackIcon,
-                            cell.getPosX() * cellSize,
-                            cell.getYPos() * cellSize,
-                            cellSize, cellSize
-                        );
-                    }
-                }
-            }
+
+        for (CommandRecord rec : records) {
+            Texture icon = rec.type == CommandRecord.Type.MOVE
+                ? moveIcon
+                : attackIcon;
+            int x = rec.type == CommandRecord.Type.MOVE
+                ? rec.cellTarget.getPosition().x
+                : rec.charTarget.getPosition().x;
+            int y = rec.type == CommandRecord.Type.MOVE
+                ? rec.cellTarget.getPosition().y
+                : rec.charTarget.getPosition().y;
+
+            batch.draw(icon, x * cellSize, y * cellSize, cellSize, cellSize);
         }
         batch.end();
     }
-
     public void dispose() {
         moveIcon.dispose();
         attackIcon.dispose();

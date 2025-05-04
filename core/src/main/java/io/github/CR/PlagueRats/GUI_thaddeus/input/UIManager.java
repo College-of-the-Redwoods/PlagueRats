@@ -6,17 +6,24 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.CR.PlagueRats.GUI_thaddeus.CommandRecord;
 import io.github.CR.PlagueRats.GUI_thaddeus.GameStage;
 import io.github.CR.PlagueRats.GUI_thaddeus.StatsPanel;
 import io.github.CR.PlagueRats.backend.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
 public class UIManager implements InputProcessor {
     private final GameStage gameStage;
     private final StatsPanel statsPanel;
+    private final List<CommandRecord> history = new ArrayList<>();
     private AbstractCharacter selectedCharacter;
 
     public UIManager(GameStage gameStage, Skin skin) {
-        this.gameStage  = gameStage;
+        this.gameStage = gameStage;
         this.statsPanel = new StatsPanel(skin);
 
         // initially hidden
@@ -26,7 +33,9 @@ public class UIManager implements InputProcessor {
         gameStage.addActor(statsPanel);
     }
 
-    /** Called by your InputRouter before any world‐click handlers. */
+    /**
+     * Called by your InputRouter before any world‐click handlers.
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (button != Input.Buttons.LEFT) return false;
@@ -42,6 +51,24 @@ public class UIManager implements InputProcessor {
         return false;     // not a UI click
     }
 
+    /**
+     * Called by CommandMenuOpener when a move/attack is chosen
+     */
+    public void record(CommandRecord rec) {
+        history.removeIf(r -> r.actor == rec.actor); // <- enforce one-per-character if you like(remove new command if one exists for the charcter already):
+        history.add(rec);
+        // update stats panel
+        updateCommandInfo(rec.actor, rec.toString());
+    }
+
+    /**
+     * For CommandRenderer to draw icons
+     */
+    public List<CommandRecord> getQueuedCommands() {
+        return Collections.unmodifiableList(history);
+    }
+
+
     // we don’t handle keyboard here; pass it along
     @Override public boolean keyDown(int keycode) {return false;}
     @Override public boolean keyUp(int keycode)   { return false; }
@@ -54,6 +81,11 @@ public class UIManager implements InputProcessor {
 
     //––– public API for the rest of your code to drive the stats panel –––//
 
+    /** Returns the currently selected PC (or null). */
+    public AbstractCharacter getSelectedCharacter() {
+        return selectedCharacter;
+    }
+
     /** Call when a new character is selected in the world. */
     public void setSelectedCharacter(AbstractCharacter c) {
         this.selectedCharacter = c;
@@ -63,6 +95,7 @@ public class UIManager implements InputProcessor {
             Gdx.app.log("UIManager", "Selected: " + c.getName());
         }
     }
+
 
     /** Clear both the model selection and the UI. */
     public void clearSelection() {

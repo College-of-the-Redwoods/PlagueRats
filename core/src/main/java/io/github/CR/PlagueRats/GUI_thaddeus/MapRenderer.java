@@ -2,7 +2,7 @@ package io.github.CR.PlagueRats.GUI_thaddeus;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import io.github.CR.PlagueRats.backend.Cell
+import io.github.CR.PlagueRats.backend.Cell;
 import io.github.CR.PlagueRats.backend.Position;
 
 import java.util.List;

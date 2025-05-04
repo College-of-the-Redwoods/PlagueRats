@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.thaddycat.gradletest.backend.GameCharacter;
+
 import io.github.CR.PlagueRats.GUI_thaddeus.input.MenuManager;
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
+import io.github.CR.PlagueRats.backend.Command;
+
+import java.util.List;
 
 public class GameStage extends Stage {
     private final StatsPanel         stats;
@@ -22,8 +25,10 @@ public class GameStage extends Stage {
     }
 
     public void showStatsFor(AbstractCharacter c) {
-        stats.update(c, GameController.INSTANCE.getQueue().stream()
-            .filter(cmd->cmd.getCharacter()==c)
-            .reduce((a,b)->b).map(Object::toString).orElse("N/A"));
+        List<Command> cmds = c.getCommandManager().getCurrentCommands();
+        String lastCmd = cmds.isEmpty()
+            ? "N/A"
+            : cmds.get(cmds.size() - 1).toString();
+        stats.update(c, lastCmd);
     }
 }

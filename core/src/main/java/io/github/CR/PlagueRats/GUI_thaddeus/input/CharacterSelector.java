@@ -1,14 +1,13 @@
 package io.github.CR.PlagueRats.GUI_thaddeus.input;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.CR.PlagueRats.GUI_thaddeus.CameraWrapper;
-
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
 import io.github.CR.PlagueRats.backend.PCCharacter;
-import io.github.CR.PlagueRats.backend.Cell;
 import io.github.CR.PlagueRats.backend.Position;
 
 /**
@@ -16,31 +15,51 @@ import io.github.CR.PlagueRats.backend.Position;
  * Only PCCharacter instances can be selected.
  */
 public class CharacterSelector extends InputAdapter {
+    private AbstractCharacter selected;
     private final int cellSize  ;
     private final CameraWrapper camera;     // to convert screen‐coords into world‐coords
     private final UIManager ui;          // to update the UI
-    private final AbstractCharacter model;     // to ask “who’s at this spot?”
-    private final CommandMenuOpener menuOpener;
-    private final AbstractCharacter characterArrayList;
+    private CommandMenuOpener menuOpener;
+
+    // Look for a character at that grid cell
+   // private final AbstractCharacter characterArrayList = (AbstractCharacter) AbstractCharacter.getCharacterArrayList();
 
 
     public CharacterSelector(CameraWrapper camera,
-                             AbstractCharacter model,
                              UIManager ui,
                              int cellSize,
                              CommandMenuOpener menuOpener)
     {
         this.camera = camera;
-        this.model  = model;
         this.ui     = ui;
         this.cellSize = cellSize;
         this.menuOpener = menuOpener;
     }
+    //so we can fix that circular dependency
+        public void setMenuOpener(CommandMenuOpener menuOpener) {
+        this.menuOpener = menuOpener;
+    }
+
+    /** Returns the PC at the given grid cell, or null if none/NPC. */
+    public AbstractCharacter getCharacterAt(int cellX, int cellY) {
+        for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
+            Position p = c.getPosition();
+            if (p.x == cellX && p.y == cellY) {
+                return (c instanceof PCCharacter) ? c : null;
+            }
+        }
+        return null;
+    }
+
+
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        menuOpener.closeMenu(); // first thing: hide any right-click menu
+        // first thing: hide any right-click menu
+        menuOpener.closeMenu();
+
         if (button != Input.Buttons.LEFT) return false; // only care about left‐clicks
-        Vector2 world = camera.unproject(screenX, screenY);
+
         // Now convert world coordinates to grid cell indices
+        Vector2 world = camera.unproject(screenX, screenY);
         int cellX = (int) (world.x / cellSize);
         int cellY = (int) (world.y / cellSize);
         // 3) Dump everything so we can inspect the math
@@ -49,24 +68,21 @@ public class CharacterSelector extends InputAdapter {
             String.format("click screen=[%d,%d]  → world=[%.2f,%.2f]  → cell=[%d,%d]",
                 screenX, screenY, world.x, world.y, cellX, cellY));
 
-        // Look for a character at that grid cell
-        characterArrayList = (AbstractCharacter) AbstractCharacter.getCharacterArrayList();
-        AbstractCharacter clicked;
-        for (AbstractCharacter c : characterArrayList ) {
+        // 1) iterate *the list* of all characters
+        AbstractCharacter clicked = null;
+        for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
 
             //compare if the position of the cell clicked matches position of characters in array list, if so return that character
-
-            Position cPos = AbstractCharacter.getPosition();
-            Position cellPos = Cell.getPosition();
-            if (cPos == cellPos)
-                return c; //give the character
-
+            Position cPos = c.getPosition();
+            if (cPos.x == cellX && cPos.y == cellY) {
+                clicked = c;
+                ui.setSelectedCharacter(clicked);
+                break; //give the character
+            }
         }
-
-        // 4) Ask your model
+        // 2) no one there?
         if (clicked == null) {
             Gdx.app.log("CharacterSelector", "  no character at that cell");
-            model.clearSelection();
             ui.clearSelection();
             return false; //let next handler try
         }
@@ -74,14 +90,19 @@ public class CharacterSelector extends InputAdapter {
         // 5) Only PCs
         if (!(clicked instanceof PCCharacter)) {
             Gdx.app.log("CharacterSelector", "  hit NPC “" + clicked.getName() + "”—ignoring");
-            model.clearSelection();
             ui.clearSelection();
             return false; //let next handler try
         }
 
         Gdx.app.log("CharacterSelector", "  selecting PC “" + clicked.getName() + "”");
-        model.selectCharacter(clicked);
         ui.setSelectedCharacter(clicked);
         return true;
     }
+
+    public AbstractCharacter getCharacterAt(Vector2 coords) {
+        return getCharacterAt((int)coords.x, (int)coords.y);
+    }
+
+
+
 }
