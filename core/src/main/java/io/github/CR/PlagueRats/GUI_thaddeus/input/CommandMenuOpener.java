@@ -76,7 +76,7 @@ public class CommandMenuOpener extends InputAdapter {
 
 
         Cell cell        = MapGenerator.getCellAt(cellX, cellY);
-        AbstractCharacter target = model.getCharacterAt(new Vector2(cellX, cellY));   // null if empty
+        AbstractCharacter target = ui.getSelectedCharacter();   // null if empty
         Gdx.app.log("CmdMenuOpener",
             String.format("  cell=%s, target=%s",
                 (cell!=null?cell.toString():"off-map"),
@@ -94,9 +94,27 @@ public class CommandMenuOpener extends InputAdapter {
 
 
             // onMove:
-            () -> ui.record(CommandRecord.move(sel, cell)),
+            () -> {
+                if (cell == null) {
+                    Gdx.app.log("CmdMenuOpener", "Off-map: abort");
+                } else if (cell.isOccupied()) {
+                    Gdx.app.log("CmdMenuOpener", "Occupied: abort");
+                } else {
+                    ui.record(CommandRecord.move(sel, cell));
+                    GameController.INSTANCE.move(sel, cell);
+                }
+            },
+
             // onAttack:
-            () -> ui.record(CommandRecord.attack(sel, target)),
+            () -> {
+                if (target == null || target == sel) {
+                    Gdx.app.log("CmdMenuOpener", "Invalid attack: abort");
+                } else {
+                    ui.record(CommandRecord.attack(sel, target));
+                    GameController.INSTANCE.attack(sel, target);
+                }
+            },
+
             // onClose:
             () -> {
                 currentMenu.remove();

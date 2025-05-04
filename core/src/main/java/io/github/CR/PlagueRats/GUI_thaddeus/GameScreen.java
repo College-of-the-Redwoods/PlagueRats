@@ -61,8 +61,7 @@ public class GameScreen implements Screen {
         // 3) character selector
         CharacterSelector selector  =  new CharacterSelector(cameraWrapper,
             uiManager,
-            CELL_SIZE,
-            null);
+            CELL_SIZE);
 
         // 4) Command-menu
         CommandMenuOpener opener = new CommandMenuOpener(cameraWrapper,
@@ -72,7 +71,6 @@ public class GameScreen implements Screen {
             skin,
             CELL_SIZE);
 
-        selector.setMenuOpener(opener);
 
         // 5) global keys handler
         GlobalKeyHandler keys = new GlobalKeyHandler();
