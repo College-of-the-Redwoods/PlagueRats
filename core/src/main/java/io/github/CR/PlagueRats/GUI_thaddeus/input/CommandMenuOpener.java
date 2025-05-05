@@ -56,14 +56,14 @@ public class CommandMenuOpener extends InputAdapter {
         }
 
         // **Tear down the old popup** before we build a new one:
-        if (currentMenu != null) {
-            currentMenu.remove();
-            currentMenu = null;
-        }
+        closeMenu();
 
         // 1) only if a PC is selected
         AbstractCharacter sel = ui.getSelectedCharacter();
         Gdx.app.log("CmdMenuOpener", "  selected character = " + (sel != null ? sel.getName() : "null"));
+        if (sel == null) {
+            Gdx.app.log("CmdMenuOpener", "  → no character selected, abort");
+            return false;}
 
         boolean alreadyHasCmd =
             ui.getQueuedCommands().stream().anyMatch(r -> r.actor == sel);
@@ -72,9 +72,7 @@ public class CommandMenuOpener extends InputAdapter {
             return true;
         }
 
-        if (sel == null) {
-            Gdx.app.log("CmdMenuOpener", "  → no character selected, abort");
-            return false;}
+
 
         // 2) translate screen → world → cell
         Vector2 world = camera.unproject(sx, sy);
@@ -111,6 +109,8 @@ public class CommandMenuOpener extends InputAdapter {
             () -> {
                 if (cell == null) {
                     Gdx.app.log("CmdMenuOpener", "Off-map: abort");
+                } else if (model.getCharacterAt(cellX, cellY) != null) {
+                    Gdx.app.log("CmdMenuOpener", "Occupied by character: abort");
                 } else if (cell.isOccupied()) {
                     Gdx.app.log("CmdMenuOpener", "Occupied: abort");
                 } else {
