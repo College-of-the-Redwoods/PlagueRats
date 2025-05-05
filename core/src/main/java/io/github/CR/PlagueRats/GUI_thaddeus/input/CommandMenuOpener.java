@@ -131,6 +131,17 @@ public class CommandMenuOpener extends InputAdapter {
             }
         );
         Gdx.app.log("CmdMenuOpener", "  CommandMenu should now be visible");
+        // Force layout so we can get size
+        currentMenu.pack();
+
+        // Clamp position so menu stays within screen
+        float menuX = Math.min(world.x, stage.getWidth() - currentMenu.getWidth());
+        float menuY = Math.min(world.y, stage.getHeight() - currentMenu.getHeight());
+
+        currentMenu.setPosition(menuX, menuY);
+
+        // Add it to the stage
+        stage.addActor(currentMenu);
         return true;
     }
 }
