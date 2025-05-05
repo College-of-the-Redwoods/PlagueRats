@@ -98,7 +98,6 @@ public class GameScreen implements Screen {
 
         camera.update();
         mapRenderer.render(camera);
-        charRenderer.render(camera);
         cmdRenderer.render(camera, uiManager.getQueuedCommands());
         gameStage.act(delta);
         gameStage.draw();

@@ -21,6 +21,7 @@ public class CommandMenuOpener extends InputAdapter {
     private CommandMenu currentMenu;
 
 
+
     public CommandMenuOpener(CameraWrapper camera,
                              CharacterSelector model,
                              UIManager ui,
@@ -63,6 +64,14 @@ public class CommandMenuOpener extends InputAdapter {
         // 1) only if a PC is selected
         AbstractCharacter sel = ui.getSelectedCharacter();
         Gdx.app.log("CmdMenuOpener", "  selected character = " + (sel != null ? sel.getName() : "null"));
+
+        boolean alreadyHasCmd =
+            ui.getQueuedCommands().stream().anyMatch(r -> r.actor == sel);
+        if (alreadyHasCmd) {
+            Gdx.app.log("CmdMenuOpener", sel.getName() + " already has a queued action");
+            return true;
+        }
+
         if (sel == null) {
             Gdx.app.log("CmdMenuOpener", "  → no character selected, abort");
             return false;}
@@ -105,9 +114,8 @@ public class CommandMenuOpener extends InputAdapter {
                 } else if (cell.isOccupied()) {
                     Gdx.app.log("CmdMenuOpener", "Occupied: abort");
                 } else {
-                    // 1) update UI
+                    // 2) record & enqueue the new one
                     ui.record(CommandRecord.move(sel, cell));
-                    // 2) queue in character’s manager
                     GameController.INSTANCE.move(sel, cell);
                 }
             },
@@ -117,9 +125,8 @@ public class CommandMenuOpener extends InputAdapter {
                 if (target == null) {
                     Gdx.app.log("CmdMenuOpener", "Invalid attack: abort");
                 } else {
-                    // 1) update UI
+                    // 2) record & enqueue the new one
                     ui.record(CommandRecord.attack(sel, target));
-                    // 2) queue in character’s manager
                     GameController.INSTANCE.attack(sel, target);
                 }
             },

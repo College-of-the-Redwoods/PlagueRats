@@ -26,7 +26,7 @@ public class GameStage extends Stage {
         super(new ScreenViewport(cameraWrapper.getCamera())); // calls Stage()
         this.cellSize= cellSize;
         this.spriteProvider = spriteProvider;
-        this.stats = new StatsPanel(skin);
+        this.stats = new StatsPanel(skin, () -> {});
 
         stats.setPosition(10, Gdx.graphics.getHeight() - 10);
         addActor(stats);

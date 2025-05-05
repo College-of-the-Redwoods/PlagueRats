@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.CR.PlagueRats.GUI_thaddeus.CommandRecord;
+import io.github.CR.PlagueRats.GUI_thaddeus.GameController;
 import io.github.CR.PlagueRats.GUI_thaddeus.GameStage;
 import io.github.CR.PlagueRats.GUI_thaddeus.StatsPanel;
 import io.github.CR.PlagueRats.backend.*;
@@ -24,7 +25,12 @@ public class UIManager implements InputProcessor {
 
     public UIManager(GameStage gameStage, Skin skin) {
         this.gameStage = gameStage;
-        this.statsPanel = new StatsPanel(skin);
+        this.statsPanel = new StatsPanel(skin, () -> {
+            AbstractCharacter sel = this.selectedCharacter;
+            if (sel != null) {
+                clearCommandFor(sel);
+            }
+        });
 
         // initially hidden
         statsPanel.setVisible(false);
@@ -89,10 +95,21 @@ public class UIManager implements InputProcessor {
     /** Call when a new character is selected in the world. */
     public void setSelectedCharacter(AbstractCharacter c) {
         this.selectedCharacter = c;
-        statsPanel.update(c, "N/A");
+
+        // Look up any queued CommandRecord for this character
+        String info = "N/A";
+        for (CommandRecord rec : history) {
+            if (rec.actor == c) {
+                info = rec.toString();
+                break;
+            }
+        }
+
+        statsPanel.update(c, info);
         statsPanel.setVisible(c != null);
+
         if (c != null) {
-            Gdx.app.log("UIManager", "Selected: " + c.getName());
+            Gdx.app.log("UIManager", "Selected: " + c.getName() + ", queued: " + info);
         }
     }
 
@@ -110,6 +127,32 @@ public class UIManager implements InputProcessor {
         if (selectedCharacter != null) {
             statsPanel.update(selectedCharacter, "N/A");
         }
+    }
+
+    private void clearCommandFor(AbstractCharacter sel) {
+        // 1) Drop sel’s record from UI history
+        history.removeIf(r -> r.actor == sel);
+
+        // 2) Snapshot remaining records
+        List<CommandRecord> remaining = new ArrayList<>(history);
+
+        // 3) Clear UI history and backend queue wholesale
+        history.clear();
+        GameController.INSTANCE.getQueue().clear();
+
+        // 4) Re‐enqueue each remaining record
+        for (CommandRecord rec : remaining) {
+            // Recurse into UI history and backend
+            history.add(rec);
+            if (rec.type == CommandRecord.Type.MOVE) {
+                GameController.INSTANCE.move(rec.actor, rec.cellTarget);
+            } else {
+                GameController.INSTANCE.attack(rec.actor, rec.charTarget);
+            }
+        }
+
+        // 5) Update stats panel for sel
+        statsPanel.update(sel, "N/A");
     }
 
     /** Updates the “queued command” text in your panel. */

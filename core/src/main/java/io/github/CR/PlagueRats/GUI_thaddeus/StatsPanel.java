@@ -1,17 +1,21 @@
 package io.github.CR.PlagueRats.GUI_thaddeus;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
-import io.github.CR.PlagueRats.backend.ResourcePoints;
 
 public class StatsPanel extends Table {
     private final Skin skin;
+    private final Runnable onChangeCommand;
 
-    public StatsPanel(Skin skin) {
+    public StatsPanel(Skin skin, Runnable onChangeCommand) {
         super();
         this.skin = skin;
+        this.onChangeCommand = onChangeCommand;
         top().left();
     }
 
@@ -23,9 +27,17 @@ public class StatsPanel extends Table {
             add(new Label("Queued: " + (queuedCommand != null ? queuedCommand : "N/A"), skin)).left().row();
             add(new Label("Name: " + c.getName(), skin)).left().row();
             add(new Label("HP: " + c.getResourcePoints().getHp(), skin)).left().row();
-        } else {
-            // optionally don't show anything at all if nothing is selected
-            // (or add blank labels if you want consistent height)
+            // Show "Change Command" button if a command is queued
+            if (queuedCommand != null && !queuedCommand.equals("N/A")) {
+                TextButton changeBtn = new TextButton("Change Command", skin);
+                changeBtn.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        onChangeCommand.run();
+                    }
+                });
+                add(changeBtn).left().row();
+            }
         }
     }
 }
