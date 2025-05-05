@@ -104,6 +104,14 @@ public class UIManager implements InputProcessor {
         statsPanel.setVisible(false);
     }
 
+    /** Clear all the queued-command previews (but keep the same selection). */
+    public void clearCommandPreviews() {
+        history.clear();
+        if (selectedCharacter != null) {
+            statsPanel.update(selectedCharacter, "N/A");
+        }
+    }
+
     /** Updates the “queued command” text in your panel. */
     public void updateCommandInfo(AbstractCharacter c, String info) {
         // only update if this character is still selected

@@ -26,21 +26,21 @@ public class GameScreen implements Screen {
     private UIManager uiManager;
 
     public GameScreen(TurnBasedGame turnBasedGame) {
-        // — camera & wrappers
         camera = new OrthographicCamera(800, 500);
+
         camera.position.set(400, 250, 0);
         camera.update();
         CameraWrapper cameraWrapper = new CameraWrapper(camera);
+
         batch   = new SpriteBatch();
-        // - skin,
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        // - menuManager
         MenuManager menuManager = new MenuManager();
-        // — Load & register characters and map
-        MapGenerator.generateCellArray(5, 5); // sets up internal state
-        CharacterGenerator.loadCharacters();
+
+
+
         List<Cell> cells = MapGenerator.getCellArray();        // now grab the list
         List<AbstractCharacter> characters = AbstractCharacter.getCharacterArrayList();
+        SpriteProvider provider = new DefaultSpriteProvider();
         // -- render map
         mapRenderer  = new MapRenderer(cells, CELL_SIZE);
         // --render planned commands
@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
         charRenderer = new CharacterRenderer(batch, characters, CELL_SIZE, new DefaultSpriteProvider());
         // build each input handler
         // 1) Stage/UI
-        this.gameStage = new GameStage(cameraWrapper, menuManager, skin);
+        this.gameStage = new GameStage(cameraWrapper, menuManager, skin, CELL_SIZE, provider);
         // 2) UI facade
         this.uiManager = new UIManager(gameStage, skin);
         // 3) character selector
@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
 
 
         // 5) global keys handler
-        GlobalKeyHandler keys = new GlobalKeyHandler();
+        GlobalKeyHandler keys = new GlobalKeyHandler(uiManager,gameStage,CELL_SIZE);
         // build the input multiplexer and register in desired order:
         InputMuxBuilder builder = new InputMuxBuilder();
         // 1 + 2 → UI layer               (Stage + raw UI)

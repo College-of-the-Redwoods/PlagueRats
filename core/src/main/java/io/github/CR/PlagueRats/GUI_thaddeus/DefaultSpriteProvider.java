@@ -18,7 +18,7 @@ public class DefaultSpriteProvider implements SpriteProvider {
         if (character instanceof NPCCharacter) {
             return "jane.png";
         }else {
-            return "error.png";
+            return "ratTestSprite2.png";
         }
     }
 }

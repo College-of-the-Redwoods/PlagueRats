@@ -1,6 +1,7 @@
 package io.github.CR.PlagueRats.GUI_thaddeus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -13,15 +14,35 @@ import java.util.List;
 
 public class GameStage extends Stage {
     private final StatsPanel         stats;
+    private final int cellSize;
+    private final SpriteProvider spriteProvider;
 
     public GameStage(CameraWrapper cameraWrapper,
                      MenuManager menus,
-                     Skin skin)
+                     Skin skin,
+                     int cellSize,
+                     SpriteProvider spriteProvider)
     {
         super(new ScreenViewport(cameraWrapper.getCamera())); // calls Stage()
+        this.cellSize= cellSize;
+        this.spriteProvider = spriteProvider;
         this.stats = new StatsPanel(skin);
+
         stats.setPosition(10, Gdx.graphics.getHeight() - 10);
         addActor(stats);
+
+        // spawn a CharacterActor per model character
+        for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
+            addActor(new CharacterActor(c, cellSize, spriteProvider));
+        }
+    }
+
+    public void refreshAllCharacterPositions(int cellSize) {
+        for (Actor a : getActors()) {
+            if (a instanceof CharacterActor) {
+                ((CharacterActor) a).updatePosition();
+            }
+        }
     }
 
     public void showStatsFor(AbstractCharacter c) {
