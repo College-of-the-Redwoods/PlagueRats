@@ -13,21 +13,16 @@ public class CommandRecord {
     public final Cell cellTarget;     // for MOVE
     public final AbstractCharacter charTarget;     // for ATTACK
 
-    private String action;
-    private Position targetPosition;
-    private AbstractCharacter targetCharacter;
-
     @Override
     public String toString() {
-        if (action == null) return "N/A";
-        if (action.equals("move")) {
-            return "Move to [" + targetPosition.x + ", " + targetPosition.y + "]";
-        } else if (action.equals("attack")) {
-            return "Attack " + targetCharacter.getName();
+        if (type == Type.MOVE && cellTarget != null) {
+            Position pos = cellTarget.getPosition();
+            return "Move to [" + pos.x + ", " + pos.y + "]";
+        } else if (type == Type.ATTACK && charTarget != null) {
+            return "Attack " + charTarget.getName();
         }
-        return action;
+        return "N/A";
     }
-
 
     private CommandRecord(Type type, AbstractCharacter actor, Cell c, AbstractCharacter t) {
         this.type       = type;
