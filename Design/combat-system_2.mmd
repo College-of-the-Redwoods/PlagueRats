@@ -1,0 +1,20 @@
+classDiagram
+    class Combatant {
+        -name: String
+        -health: int
+        -attackPower: int
+        +attack(target: Combatant): void
+        +takeDamage(amount: int): void
+        +isAlive(): boolean
+        +getHealth(): int
+        +getName(): String
+    }
+
+    class Player {
+    }
+
+    class Enemy {
+    }
+
+    Combatant <|-- Player
+    Combatant <|-- Enemy

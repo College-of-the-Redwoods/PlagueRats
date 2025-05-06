@@ -1,3 +1,6 @@
 public class Player extends Combatant {
-    // Can override attack() later to add crits or weapons
+    public Player(String name, int health, int attackPower) {
+        super(name, health, attackPower);
+    }
+
 }

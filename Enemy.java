@@ -1,3 +1,6 @@
 public class Enemy extends Combatant {
-    // Could later add special attack patterns or AI
+    public Enemy(String name, int health, int attackPower) {
+        super(name, health, attackPower);
+    }
+
 }
