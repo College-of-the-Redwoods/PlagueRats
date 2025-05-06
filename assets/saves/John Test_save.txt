@@ -1,0 +1,10 @@
+PC: true
+Name: John Test
+HP: 100
+MP: 0
+AP: 0
+XP: 0
+SP: 0
+Position: x = 1, y = 1
+Equipment: Bastard Sword, Buckler
+sprite: john.png
