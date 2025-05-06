@@ -5,8 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import io.github.CR.PlagueRats.GUI_thaddeus.*;
-import io.github.CR.PlagueRats.GUI_thaddeus.CommandRecord;
+import io.github.CR.PlagueRats.GUI_thaddeus.record.CommandRecord;
+import io.github.CR.PlagueRats.GUI_thaddeus.components.CommandMenu;
+import io.github.CR.PlagueRats.GUI_thaddeus.control.GameStage;
 import io.github.CR.PlagueRats.backend.*;
 
 //  Single Responsibility: only responsible for “showing the menu”

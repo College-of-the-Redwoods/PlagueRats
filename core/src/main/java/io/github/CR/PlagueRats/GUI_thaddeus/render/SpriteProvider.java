@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+package io.github.CR.PlagueRats.GUI_thaddeus.render;
 
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
 

@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+package io.github.CR.PlagueRats.GUI_thaddeus.control;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.CR.PlagueRats.GUI_thaddeus.input.*;
+import io.github.CR.PlagueRats.GUI_thaddeus.components.MenuManager;
+import io.github.CR.PlagueRats.GUI_thaddeus.render.*;
 import io.github.CR.PlagueRats.backend.*;
 
 import java.util.List;
@@ -18,9 +20,9 @@ public class GameScreen implements Screen {
 
     private final OrthographicCamera  camera;
     private final SpriteBatch         batch;
-    private final MapRenderer         mapRenderer;
-    private final CharacterRenderer   charRenderer;
-    private final CommandRenderer     cmdRenderer;
+    private final MapRenderer mapRenderer;
+    private final CharacterRenderer charRenderer;
+    private final CommandRenderer cmdRenderer;
 
     private GameStage gameStage;
     private UIManager uiManager;

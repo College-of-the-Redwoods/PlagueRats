@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+package io.github.CR.PlagueRats.GUI_thaddeus.components;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

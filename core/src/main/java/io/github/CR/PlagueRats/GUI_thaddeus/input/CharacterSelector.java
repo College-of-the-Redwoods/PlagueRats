@@ -7,9 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
-import io.github.CR.PlagueRats.GUI_thaddeus.CameraWrapper;
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
-import io.github.CR.PlagueRats.backend.PCCharacter;
 import io.github.CR.PlagueRats.backend.Position;
 
 /**

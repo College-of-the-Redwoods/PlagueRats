@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus.input;
+package io.github.CR.PlagueRats.GUI_thaddeus.control;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;

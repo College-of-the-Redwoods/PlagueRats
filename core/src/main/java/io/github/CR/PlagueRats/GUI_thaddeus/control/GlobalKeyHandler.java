@@ -1,9 +1,8 @@
-package io.github.CR.PlagueRats.GUI_thaddeus.input;
+package io.github.CR.PlagueRats.GUI_thaddeus.control;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import io.github.CR.PlagueRats.GUI_thaddeus.CommandRecord;
-import io.github.CR.PlagueRats.GUI_thaddeus.GameController;
-import io.github.CR.PlagueRats.GUI_thaddeus.GameStage;
+import io.github.CR.PlagueRats.GUI_thaddeus.input.UIManager;
+import io.github.CR.PlagueRats.GUI_thaddeus.record.CommandRecord;
 
 /**
  * Handles “forward” and “undo” via keyboard.

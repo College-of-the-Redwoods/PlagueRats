@@ -1,8 +1,9 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+package io.github.CR.PlagueRats.GUI_thaddeus.render;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.github.CR.PlagueRats.GUI_thaddeus.record.CommandRecord;
 
 import java.util.List;
 

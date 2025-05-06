@@ -6,9 +6,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import io.github.CR.PlagueRats.GUI_thaddeus.CommandRecord;
-import io.github.CR.PlagueRats.GUI_thaddeus.GameStage;
-import io.github.CR.PlagueRats.GUI_thaddeus.StatsPanel;
+import io.github.CR.PlagueRats.GUI_thaddeus.record.CommandRecord;
+import io.github.CR.PlagueRats.GUI_thaddeus.control.GameStage;
+import io.github.CR.PlagueRats.GUI_thaddeus.components.StatsPanel;
 import io.github.CR.PlagueRats.backend.*;
 
 import java.util.ArrayList;

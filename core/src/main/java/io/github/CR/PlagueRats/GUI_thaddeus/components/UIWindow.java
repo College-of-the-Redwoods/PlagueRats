@@ -1,4 +1,4 @@
-package io.github.CR.PlagueRats.GUI_thaddeus;
+package io.github.CR.PlagueRats.GUI_thaddeus.components;
 
 public interface UIWindow {
     void setVisible(boolean visible);
