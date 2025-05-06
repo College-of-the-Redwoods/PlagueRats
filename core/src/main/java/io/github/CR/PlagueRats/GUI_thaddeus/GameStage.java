@@ -8,7 +8,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import io.github.CR.PlagueRats.GUI_thaddeus.input.MenuManager;
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
+import io.github.CR.PlagueRats.backend.Cell;
 import io.github.CR.PlagueRats.backend.Command;
+import io.github.CR.PlagueRats.backend.MapGenerator;
 
 import java.util.List;
 
@@ -33,11 +35,15 @@ public class GameStage extends Stage {
 
         // spawn a CharacterActor per model character
         for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
+            Cell start = MapGenerator.getCellAt(c.getPosition().x, c.getPosition().y);
+            if (start != null && !start.isOccupied()) {
+                start.occupyCell();
+            }
             addActor(new CharacterActor(c, cellSize, spriteProvider));
         }
     }
 
-    public void refreshAllCharacterPositions(int cellSize) {
+    public void refreshAllCharacterPositions() {
         for (Actor a : getActors()) {
             if (a instanceof CharacterActor) {
                 ((CharacterActor) a).updatePosition();

@@ -66,7 +66,7 @@ public class CommandMenuOpener extends InputAdapter {
             return false;}
 
         boolean alreadyHasCmd =
-            ui.getQueuedCommands().stream().anyMatch(r -> r.actor == sel);
+            ui.getHistory().stream().anyMatch(r -> r.actor == sel);
         if (alreadyHasCmd) {
             Gdx.app.log("CmdMenuOpener", sel.getName() + " already has a queued action");
             return true;
@@ -94,11 +94,18 @@ public class CommandMenuOpener extends InputAdapter {
                 (cell!=null?cell.toString():"off-map"),
                 (target!=null?target.getName():"<empty>")));
 
-        // 2) build the menu and capture it so we can remove it later
-        // 1-slot box so our lambdas can close over it:
-        // onMove:
-        // onAttack:
-        // onClose:
+        // NEW: block if any character is currently at that cell
+        boolean occupiedByChar = AbstractCharacter
+            .getCharacterArrayList()
+            .stream()
+            .anyMatch(ch -> {
+                Position p = ch.getPosition();
+                return p.x == cell.getPosition().x && p.y == cell.getPosition().y;
+            });
+        if (occupiedByChar) {
+            Gdx.app.log("CmdMenuOpener", "Occupied by character (model): abort");
+            return false;
+        }
 
         Gdx.app.log("CmdMenuOpener", "  creating CommandMenu at world coords");
         currentMenu = new CommandMenu(
@@ -107,28 +114,14 @@ public class CommandMenuOpener extends InputAdapter {
 
             // onMove:
             () -> {
-                if (cell == null) {
-                    Gdx.app.log("CmdMenuOpener", "Off-map: abort");
-                } else if (model.getCharacterAt(cellX, cellY) != null) {
-                    Gdx.app.log("CmdMenuOpener", "Occupied by character: abort");
-                } else if (cell.isOccupied()) {
-                    Gdx.app.log("CmdMenuOpener", "Occupied: abort");
-                } else {
-                    // 2) record & enqueue the new one
-                    ui.record(CommandRecord.move(sel, cell));
-                    GameController.INSTANCE.move(sel, cell);
-                }
+                if (cell == null || cell.isOccupied()) return;
+                ui.record(CommandRecord.move(sel, cell));
             },
 
             // onAttack:
             () -> {
-                if (target == null) {
-                    Gdx.app.log("CmdMenuOpener", "Invalid attack: abort");
-                } else {
-                    // 2) record & enqueue the new one
-                    ui.record(CommandRecord.attack(sel, target));
-                    GameController.INSTANCE.attack(sel, target);
-                }
+                if (target == null) return;
+                ui.record(CommandRecord.attack(sel, target));
             },
 
             // onClose:

@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.CR.PlagueRats.GUI_thaddeus.CommandRecord;
-import io.github.CR.PlagueRats.GUI_thaddeus.GameController;
 import io.github.CR.PlagueRats.GUI_thaddeus.GameStage;
 import io.github.CR.PlagueRats.GUI_thaddeus.StatsPanel;
 import io.github.CR.PlagueRats.backend.*;
@@ -70,7 +69,7 @@ public class UIManager implements InputProcessor {
     /**
      * For CommandRenderer to draw icons
      */
-    public List<CommandRecord> getQueuedCommands() {
+    public List<CommandRecord> getHistory() {
         return Collections.unmodifiableList(history);
     }
 
@@ -130,28 +129,9 @@ public class UIManager implements InputProcessor {
     }
 
     private void clearCommandFor(AbstractCharacter sel) {
-        // 1) Drop sel’s record from UI history
+        // Remove sel’s record
         history.removeIf(r -> r.actor == sel);
-
-        // 2) Snapshot remaining records
-        List<CommandRecord> remaining = new ArrayList<>(history);
-
-        // 3) Clear UI history and backend queue wholesale
-        history.clear();
-        GameController.INSTANCE.getQueue().clear();
-
-        // 4) Re‐enqueue each remaining record
-        for (CommandRecord rec : remaining) {
-            // Recurse into UI history and backend
-            history.add(rec);
-            if (rec.type == CommandRecord.Type.MOVE) {
-                GameController.INSTANCE.move(rec.actor, rec.cellTarget);
-            } else {
-                GameController.INSTANCE.attack(rec.actor, rec.charTarget);
-            }
-        }
-
-        // 5) Update stats panel for sel
+        // Update stats panel
         statsPanel.update(sel, "N/A");
     }
 

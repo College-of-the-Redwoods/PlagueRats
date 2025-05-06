@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
 
 
         // 5) global keys handler
-        GlobalKeyHandler keys = new GlobalKeyHandler(uiManager,gameStage,CELL_SIZE);
+        GlobalKeyHandler keys = new GlobalKeyHandler(uiManager,gameStage);
         // build the input multiplexer and register in desired order:
         InputMuxBuilder builder = new InputMuxBuilder();
         // 1 + 2 → UI layer               (Stage + raw UI)
@@ -98,7 +98,7 @@ public class GameScreen implements Screen {
 
         camera.update();
         mapRenderer.render(camera);
-        cmdRenderer.render(camera, uiManager.getQueuedCommands());
+        cmdRenderer.render(camera, uiManager.getHistory());
         gameStage.act(delta);
         gameStage.draw();
     }
