@@ -3,8 +3,7 @@ package io.github.CR.PlagueRats.GUI_thaddeus.control;
 import io.github.CR.PlagueRats.backend.*;
 import java.util.List;
 /**
- * GameController (Singleton enum)
- * ->
+ * GameController (Singleton enum)->
  * Central facade for issuing Move and Attack commands,
  * delegating to each character’s CommandManager, then
  * stepping or undoing via the backend TurnBasedGame.
