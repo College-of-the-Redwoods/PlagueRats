@@ -17,6 +17,16 @@ import io.github.CR.PlagueRats.backend.MapGenerator;
 
 import java.util.List;
 
+/**
+ * GameStage
+ * ->
+ * A Scene2D Stage that:
+ * 1• Holds CharacterActor instances for each AbstractCharacter.
+ * 2• Marks each starting cell occupied in the backend.
+ * 3• Hosts the StatsPanel UI in the corner.
+ * 4• Provides a method to refresh all actor positions.
+ */
+
 public class GameStage extends Stage {
     private final StatsPanel stats;
     private final int cellSize;
@@ -30,12 +40,13 @@ public class GameStage extends Stage {
         super(new ScreenViewport(cameraWrapper.getCamera())); // calls Stage()
         this.cellSize= cellSize;
         this.spriteProvider = spriteProvider;
-        this.stats = new StatsPanel(skin, () -> {});
 
+        // 1) StatsPanel in upper-left
+        this.stats = new StatsPanel(skin, () -> {});
         stats.setPosition(10, Gdx.graphics.getHeight() - 10);
         addActor(stats);
 
-        // spawn a CharacterActor per model character
+        // 2) Spawn each character actor & occupy its cell
         for (AbstractCharacter c : AbstractCharacter.getCharacterArrayList()) {
             Cell start = MapGenerator.getCellAt(c.getPosition().x, c.getPosition().y);
             if (start != null && !start.isOccupied()) {
@@ -45,6 +56,7 @@ public class GameStage extends Stage {
         }
     }
 
+    /** Updates every CharacterActor’s position from its model. */
     public void refreshAllCharacterPositions() {
         for (Actor a : getActors()) {
             if (a instanceof CharacterActor) {
@@ -53,6 +65,7 @@ public class GameStage extends Stage {
         }
     }
 
+    /** (Optional) Directly update the stats panel for a given character. */
     public void showStatsFor(AbstractCharacter c) {
         List<Command> cmds = c.getCommandManager().getCurrentCommands();
         String lastCmd = cmds.isEmpty()
@@ -61,3 +74,8 @@ public class GameStage extends Stage {
         stats.update(c, lastCmd);
     }
 }
+ /*
+     * Patterns:
+    *   • Composite           ◀ Structural (Stage is a Group of CharacterActor & StatsPanel)
+    *   • Iterator            ◀ Behavioral  (loops over getActors() or character list)
+    */

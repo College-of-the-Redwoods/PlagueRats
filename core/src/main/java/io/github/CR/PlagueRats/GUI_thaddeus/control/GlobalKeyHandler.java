@@ -5,7 +5,11 @@ import io.github.CR.PlagueRats.GUI_thaddeus.input.UIManager;
 import io.github.CR.PlagueRats.GUI_thaddeus.record.CommandRecord;
 
 /**
- * Handles “forward” and “undo” via keyboard.
+ * GlobalKeyHandler
+ * ->
+ * Intercepts SPACE and BACKSPACE key presses:
+ * • SPACE: clears backend queue, replays UI history, steps the game, clears previews, refreshes positions.
+ * • BACKSPACE: undoes the last step, clears previews, refreshes positions.
  */
 public class GlobalKeyHandler extends InputAdapter {
     private final UIManager ui;
@@ -21,7 +25,7 @@ public class GlobalKeyHandler extends InputAdapter {
         switch (keycode) {
             case Input.Keys.SPACE:
                 // 1) clear backend commands
-                GameController.INSTANCE.getQueue().clear();
+                GameController.INSTANCE.getCurrentCommands().clear();
                 // 2) replay UI history into backend
                 for (CommandRecord rec : ui.getHistory()) {
                     if (rec.type == CommandRecord.Type.MOVE) {
@@ -30,16 +34,16 @@ public class GlobalKeyHandler extends InputAdapter {
                         GameController.INSTANCE.attack(rec.actor, rec.charTarget);
                     }
                 }
-                // 3) execute
+                // 3) execute step
                 GameController.INSTANCE.step();
                 // 4) clear UI previews
                 ui.clearCommandPreviews();
-                // 5) refresh visuals
+                // 5) refresh character positions
                 stage.refreshAllCharacterPositions();
                 return true;
 
             case Input.Keys.BACKSPACE:
-                // implement undo similarly if desired
+                // Undo last step
                 GameController.INSTANCE.undo();
                 ui.clearCommandPreviews();
                 stage.refreshAllCharacterPositions();
@@ -50,3 +54,7 @@ public class GlobalKeyHandler extends InputAdapter {
         }
     }
 }
+/*
+ * Pattern: Command    ◀ Behavioral (it replays CommandRecord instances)
+ * Pattern: Observer   ◀ Behavioral (listens to keyboard events)
+ */

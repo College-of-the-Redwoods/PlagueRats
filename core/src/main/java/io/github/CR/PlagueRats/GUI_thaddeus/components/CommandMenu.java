@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  * CommandMenu
- *
  * A simple popup (Scene2D Table) that appears at the click location.
  * It shows a button for each command available — currently Move and Attack—and runs the supplied callbacks when clicked.
  * When either action finishes, it also runs an onClose callback to hide itself.
@@ -57,3 +56,8 @@ public class CommandMenu extends Table {
         stage.addActor(this);
     }
 }
+ /*
+   Patterns:
+     • Composite           ◀ Structural (Table holds multiple widgets)
+     • Observer            ◀ Behavioral (ClickListeners on Move & Attack buttons)
+ */
