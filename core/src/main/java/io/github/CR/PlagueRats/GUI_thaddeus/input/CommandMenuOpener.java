@@ -95,28 +95,31 @@ public class CommandMenuOpener extends InputAdapter {
                 (cell!=null?cell.toString():"off-map"),
                 (target!=null?target.getName():"<empty>")));
 
-        // NEW: block if any character is currently at that cell
-        boolean occupiedByChar = AbstractCharacter
-            .getCharacterArrayList()
-            .stream()
-            .anyMatch(ch -> {
-                Position p = ch.getPosition();
-                return p.x == cell.getPosition().x && p.y == cell.getPosition().y;
-            });
-        if (occupiedByChar) {
-            Gdx.app.log("CmdMenuOpener", "Occupied by character (model): abort");
-            return false;
-        }
+
 
         Gdx.app.log("CmdMenuOpener", "  creating CommandMenu at world coords");
         currentMenu = new CommandMenu(
             stage, skin, world.x, world.y,
 
 
-            // onMove:
             () -> {
-                if (cell == null || cell.isOccupied()) return;
-                ui.record(CommandRecord.move(sel, cell));
+                if (cell == null) {
+                    Gdx.app.log("CmdMenuOpener", "Off‐map: abort");
+                } else {
+                    // Prevent stacking on any character’s *current* position:
+                    boolean occupiedByChar = AbstractCharacter
+                        .getCharacterArrayList()
+                        .stream()
+                        .anyMatch(ch -> {
+                            Position p = ch.getPosition();
+                            return p.x == cell.getPosition().x && p.y == cell.getPosition().y;
+                        });
+                    if (occupiedByChar) {
+                        Gdx.app.log("CmdMenuOpener", "Move target occupied: abort");
+                    } else {
+                        ui.record(CommandRecord.move(sel, cell));
+                    }
+                }
             },
 
             // onAttack:
