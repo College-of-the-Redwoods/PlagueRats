@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import io.github.CR.PlagueRats.GUI_thaddeus.input.CameraWrapper;
-import io.github.CR.PlagueRats.GUI_thaddeus.components.MenuManager;
 import io.github.CR.PlagueRats.GUI_thaddeus.components.StatsPanel;
 import io.github.CR.PlagueRats.GUI_thaddeus.render.CharacterActor;
 import io.github.CR.PlagueRats.GUI_thaddeus.render.SpriteProvider;
@@ -24,7 +23,6 @@ public class GameStage extends Stage {
     private final SpriteProvider spriteProvider;
 
     public GameStage(CameraWrapper cameraWrapper,
-                     MenuManager menus,
                      Skin skin,
                      int cellSize,
                      SpriteProvider spriteProvider)
