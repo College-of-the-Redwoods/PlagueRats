@@ -1,0 +1,12 @@
+PC: false
+Name: Dummy Test
+x: 3
+y: 1
+HP: 42
+MP: 60
+AP: 0
+XP: 99
+SP: 0
+Position: x = 4, y = 2
+Equipment: Bastard Sword, Buckler
+sprite:
