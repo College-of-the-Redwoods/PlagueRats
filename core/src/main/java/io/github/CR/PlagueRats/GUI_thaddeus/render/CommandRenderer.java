@@ -7,6 +7,14 @@ import io.github.CR.PlagueRats.GUI_thaddeus.record.CommandRecord;
 
 import java.util.List;
 
+/**
+ * CommandRenderer
+ * Draws an icon on each queued CommandRecord’s target cell:
+ *   • Uses moveIcon for MOVE commands
+ *   • Uses attackIcon for ATTACK commands
+ *   • Draws at cellTarget or charTarget positions
+ * Single Responsibility: visual feedback of queued actions.
+ */
 public class CommandRenderer {
     private final SpriteBatch batch;
     private final Texture moveIcon;
@@ -22,6 +30,9 @@ public class CommandRenderer {
         this.attackIcon  = attackIcon;
         this.cellSize    = cellSize;
     }
+    /**
+     * Renders each command’s icon at the target location.
+     */
     public void render(OrthographicCamera cam, List<CommandRecord> records) {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
@@ -46,3 +57,7 @@ public class CommandRenderer {
         attackIcon.dispose();
     }
 }
+/*
+ * Patterns:
+ *   • Interpreter — examines CommandRecord.Type to choose icon
+ */

@@ -9,7 +9,12 @@ import io.github.CR.PlagueRats.backend.AbstractCharacter;
 import io.github.CR.PlagueRats.backend.Position;
 
 /**
- * A Scene2D Actor that wraps an AbstractCharacter and draws its sprite.
+ * CharacterActor
+ * A Scene2D Actor that wraps a single AbstractCharacter:
+ *   • Loads its sprite once
+ *   • Positions itself based on the character’s Position model
+ *   • Draws the sprite each frame
+ * Single Responsibility: visual representation of one character.
  */
 public class CharacterActor extends Actor {
     private final AbstractCharacter character;
@@ -19,17 +24,16 @@ public class CharacterActor extends Actor {
     public CharacterActor(AbstractCharacter character, int cellSize, SpriteProvider spriteProvider) {
         this.character = character;
         this.cellSize = cellSize;
+        // Strategy pattern: choose sprite path via injected provider
         String spritePath = spriteProvider.getSpritePath(character);
         this.texture = new Texture(Gdx.files.internal(spritePath));
-        // set size and initial position
         setSize(cellSize, cellSize);
-        // disable touch so UI clicks fall through to the selectors
+        // Let input clicks fall through to world handlers
         setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
         updatePosition();
     }
-
     /**
-     * Reposition actor based on its model's Position.
+     * Pull the model’s Position and update this Actor’s onscreen coordinates.
      */
     public void updatePosition() {
         Position p = character.getPosition();
@@ -38,13 +42,19 @@ public class CharacterActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        // Render the character sprite
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
     /**
-     * Dispose the texture when the stage is disposed manually (if needed).
+     * Clean up GPU resources if/when this Actor is manually disposed.
      */
     public void dispose() {
         texture.dispose();
     }
 }
+/*
+ * Patterns:
+ *   • Strategy  — SpriteProvider injection
+ *   • Adapter   — Scene2D Actor adapts our model to a drawable
+ */

@@ -8,7 +8,14 @@ import io.github.CR.PlagueRats.backend.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * CharacterRenderer
+ * Draws all characters each frame using a single SpriteBatch:
+ *   • Caches textures in a Map<String,Texture>
+ *   • Queries each character’s Position
+ *   • Renders at (x*cellSize,y*cellSize)
+ * Single Responsibility: batch‐rendering of all characters.
+ */
 public class CharacterRenderer {
     private final SpriteBatch batch;
     private final List<AbstractCharacter> characters;
@@ -25,7 +32,9 @@ public class CharacterRenderer {
         this.cellSize = cellSize;
         this.spriteInterface = spriteInterface;
     }
-
+    /**
+     * Renders each character’s sprite at its model position.
+     */
     public void render(OrthographicCamera cam) {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
@@ -38,3 +47,7 @@ public class CharacterRenderer {
         batch.end();
     }
 }
+/*
+ * Patterns:
+ *   • Flyweight — caching Texture instances keyed by path
+ */
