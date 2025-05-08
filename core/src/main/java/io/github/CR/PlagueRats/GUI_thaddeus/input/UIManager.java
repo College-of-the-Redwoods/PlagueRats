@@ -14,8 +14,15 @@ import io.github.CR.PlagueRats.backend.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-
+/**
+ * UIManager
+ * ->
+ * Bridges raw input and the StatsPanel UI:
+ *   • intercepts left‐clicks on UI elements
+ *   • tracks selection via setSelectedCharacter(...)
+ *   • records CommandRecord history
+ *   • updates StatsPanel on each change
+ */
 public class UIManager implements InputProcessor {
     private final GameStage gameStage;
     private final StatsPanel statsPanel;
@@ -39,58 +46,44 @@ public class UIManager implements InputProcessor {
     }
 
     /**
-     * Called by your InputRouter before any world‐click handlers.
+     * Called by InputRouter before any world‐click handlers.
      */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        // Let Scene2D UI elements handle clicks first
         if (button != Input.Buttons.LEFT) return false;
-// convert from **screen** to **stage** coords:
+
+        // convert from **screen** to **stage** coords:
         Vector2 stageCoords = gameStage.screenToStageCoordinates(new Vector2(screenX, screenY));
+
         // let Scene2D UI elements have first crack
         Actor hit = gameStage.hit(stageCoords.x, stageCoords.y, true);
         if (hit != null) {
+
             // dispatch into Stage (buttons, menus, etc)
             gameStage.touchDown(screenX, screenY, pointer, button);
             return true;  // consumed by UI
         }
         return false;     // not a UI click
     }
-
-    /**
-     * Called by CommandMenuOpener when a move/attack is chosen
-     */
+    /** Add or replace the record for this actor */
     public void record(CommandRecord rec) {
         history.removeIf(r -> r.actor == rec.actor); // <- enforce one-per-character if you like(remove new command if one exists for the charcter already):
         history.add(rec);
         // update stats panel
         updateCommandInfo(rec.actor, rec.toString());
     }
-
-    /**
-     * For CommandRenderer to draw icons
-     */
+    /** Expose an unmodifiable view for rendering Command icons */
     public List<CommandRecord> getHistory() {
         return Collections.unmodifiableList(history);
     }
-
-
-    // we don’t handle keyboard here; pass it along
-    @Override public boolean keyDown(int keycode) {return false;}
-    @Override public boolean keyUp(int keycode)   { return false; }
-    @Override public boolean keyTyped(char character)       { return false; }
-    @Override public boolean touchUp(int x, int y, int p, int b)     { return false; }
-    @Override public boolean touchCancelled(int i, int i1, int i2, int i3) {return false; }
-    @Override public boolean touchDragged(int x, int y, int p)       { return false; }
-    @Override public boolean mouseMoved(int x, int y)               { return false; }
-    @Override public boolean scrolled(float dx, float dy)           { return false; }
-
     //––– public API for the rest of your code to drive the stats panel –––//
 
     /** Returns the currently selected PC (or null). */
     public AbstractCharacter getSelectedCharacter() {
         return selectedCharacter;
     }
-
     /** Call when a new character is selected in the world. */
     public void setSelectedCharacter(AbstractCharacter c) {
         this.selectedCharacter = c;
@@ -103,7 +96,6 @@ public class UIManager implements InputProcessor {
                 break;
             }
         }
-
         statsPanel.update(c, info);
         statsPanel.setVisible(c != null);
 
@@ -111,15 +103,12 @@ public class UIManager implements InputProcessor {
             Gdx.app.log("UIManager", "Selected: " + c.getName() + ", queued: " + info);
         }
     }
-
-
     /** Clear both the model selection and the UI. */
     public void clearSelection() {
         this.selectedCharacter = null;
         statsPanel.update(null, null);
         statsPanel.setVisible(false);
     }
-
     /** Clear all the queued-command previews (but keep the same selection). */
     public void clearCommandPreviews() {
         history.clear();
@@ -127,14 +116,12 @@ public class UIManager implements InputProcessor {
             statsPanel.update(selectedCharacter, "N/A");
         }
     }
-
     private void clearCommandFor(AbstractCharacter sel) {
         // Remove sel’s record
         history.removeIf(r -> r.actor == sel);
         // Update stats panel
         statsPanel.update(sel, "N/A");
     }
-
     /** Updates the “queued command” text in your panel. */
     public void updateCommandInfo(AbstractCharacter c, String info) {
         // only update if this character is still selected
@@ -142,4 +129,14 @@ public class UIManager implements InputProcessor {
             statsPanel.update(c, info);
         }
     }
+    // we don’t handle keyboard here; pass it along
+    @Override public boolean keyDown(int keycode) {return false;}
+    @Override public boolean keyUp(int keycode)   { return false; }
+    @Override public boolean keyTyped(char character)       { return false; }
+    @Override public boolean touchUp(int x, int y, int p, int b)     { return false; }
+    @Override public boolean touchCancelled(int i, int i1, int i2, int i3) {return false; }
+    @Override public boolean touchDragged(int x, int y, int p)       { return false; }
+    @Override public boolean mouseMoved(int x, int y)               { return false; }
+    @Override public boolean scrolled(float dx, float dy)           { return false; }
+
 }

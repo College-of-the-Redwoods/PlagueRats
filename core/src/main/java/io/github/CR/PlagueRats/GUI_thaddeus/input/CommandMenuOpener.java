@@ -10,6 +10,15 @@ import io.github.CR.PlagueRats.GUI_thaddeus.components.CommandMenu;
 import io.github.CR.PlagueRats.GUI_thaddeus.control.GameStage;
 import io.github.CR.PlagueRats.backend.*;
 
+/**
+ * CommandMenuOpener
+ * ->
+ * On right‐click, if a PC is selected and has no queued action:
+ *   • computes target cell/character
+ *   • opens a small CommandMenu at mouse location
+ *   • records move or attack choice in UIManager
+ *   • clamps menu to stay on-screen
+ */
 //  Single Responsibility: only responsible for “showing the menu”
 public class CommandMenuOpener extends InputAdapter {
     private final CameraWrapper camera;
@@ -18,10 +27,7 @@ public class CommandMenuOpener extends InputAdapter {
     private final GameStage stage;
     private final Skin skin;
     private final int cellSize;
-
     private CommandMenu currentMenu;
-
-
 
     public CommandMenuOpener(CameraWrapper camera,
                              CharacterSelector model,
@@ -29,8 +35,6 @@ public class CommandMenuOpener extends InputAdapter {
                              GameStage stage,
                              Skin skin,
                              int cellSize) {
-
-
         this.camera   = camera;
         this.model    = model;
         this.ui = ui;
@@ -38,6 +42,8 @@ public class CommandMenuOpener extends InputAdapter {
         this.skin     = skin;
         this.cellSize = cellSize;
     }
+
+    /** Remove existing menu if present */
     public void closeMenu() {
         if (currentMenu != null) {
             Gdx.app.log("CmdMenuOpener", "closeMenu() removing existing menu");
@@ -51,21 +57,22 @@ public class CommandMenuOpener extends InputAdapter {
         Gdx.app.log("CmdMenuOpener",
             String.format("touchDown sx=%d sy=%d ptr=%d btn=%d", sx, sy, ptr, button));
 
+        // Only right‐click
         if (button != Input.Buttons.RIGHT) {
             Gdx.app.log("CmdMenuOpener", "  → not right-click, ignoring");
             return false;
         }
-
         // **Tear down the old popup** before we build a new one:
         closeMenu();
 
-        // 1) only if a PC is selected
+        // 1) PC must be selected
         AbstractCharacter sel = ui.getSelectedCharacter();
         Gdx.app.log("CmdMenuOpener", "  selected character = " + (sel != null ? sel.getName() : "null"));
         if (sel == null) {
             Gdx.app.log("CmdMenuOpener", "  → no character selected, abort");
-            return false;}
-
+            return false;
+        }
+        // 2) PC cannot already have a queued action
         boolean alreadyHasCmd =
             ui.getHistory().stream().anyMatch(r -> r.actor == sel);
         if (alreadyHasCmd) {
@@ -73,15 +80,12 @@ public class CommandMenuOpener extends InputAdapter {
             return true;
         }
 
-
-
-        // 2) translate screen → world → cell
+        // 3) Convert to cell coords
         Vector2 world = camera.unproject(sx, sy);
         int cellX = (int)(world.x / cellSize);
         int cellY = (int)(world.y / cellSize);
         Gdx.app.log("CmdMenuOpener",
             String.format("  world=[%.2f,%.2f] → cell=[%d,%d]", world.x, world.y, cellX, cellY));
-
 
         Cell cell        = MapGenerator.getCellAt(cellX, cellY);
         AbstractCharacter rawTarget = model.getCharacterAt(cellX, cellY);
@@ -90,23 +94,16 @@ public class CommandMenuOpener extends InputAdapter {
             ? rawTarget
             : null;
 
-        Gdx.app.log("CmdMenuOpener",
-            String.format("  cell=%s, occupant=%s",
-                (cell!=null?cell.toString():"off-map"),
-                (target!=null?target.getName():"<empty>")));
-
-
-
-        Gdx.app.log("CmdMenuOpener", "  creating CommandMenu at world coords");
+        // 4) Build and show CommandMenu
         currentMenu = new CommandMenu(
             stage, skin, world.x, world.y,
 
-
+            // onMove
             () -> {
                 if (cell == null) {
                     Gdx.app.log("CmdMenuOpener", "Off‐map: abort");
                 } else {
-                    // Prevent stacking on any character’s *current* position:
+                    // prevent moving onto any occupied cell
                     boolean occupiedByChar = AbstractCharacter
                         .getCharacterArrayList()
                         .stream()
@@ -135,6 +132,7 @@ public class CommandMenuOpener extends InputAdapter {
             }
         );
         Gdx.app.log("CmdMenuOpener", "  CommandMenu should now be visible");
+
         // Force layout so we can get size
         currentMenu.pack();
 
@@ -149,3 +147,9 @@ public class CommandMenuOpener extends InputAdapter {
         return true;
     }
 }
+/*
+ * Patterns:
+ *   • Observer    ◀ Behavioral (listens for right‐click)
+ *   • Command     ◀ Behavioral (records user commands)
+ *   • Composite   ◀ Structural (uses CommandMenu Table)
+ */
