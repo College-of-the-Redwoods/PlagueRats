@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import io.github.CR.PlagueRats.backend.AbstractCharacter;
 import io.github.CR.PlagueRats.backend.Position;
+import io.github.CR.PlagueRats.backend.PCCharacter;
 
 /**
  * CharacterSelector
@@ -49,7 +50,7 @@ public class CharacterSelector extends InputAdapter {
         // 2) Find any character at that cell
         AbstractCharacter clicked = getCharacterAt(cellX, cellY);
 
-        if (clicked == null) {
+        if (!(clicked instanceof PCCharacter)) {
             // nothing or NPC there → clear selection
             ui.clearSelection();
             Gdx.app.log("CharacterSelector", "no PC at that cell, clearing");
