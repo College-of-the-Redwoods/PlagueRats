@@ -13,7 +13,4 @@ public class Receiver {
         System.exit(0);
     }
 
-    public void settings() {
-        game.setScreen(new SettingsMenu(game));
-    }
 }

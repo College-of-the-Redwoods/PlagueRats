@@ -1,0 +1,77 @@
+classDiagram
+    Character <|-- Enemy: Implements
+    Character <|-- FriendlyRat: Implements
+    StatusMenu --> Iterator
+    StatusMenu --* PopulationList
+    PopulationList <|-- FriendlyList: Implements
+    PopulationList <|-- EnemyList: Implements
+    Character *-- FriendlyList
+    Character *-- EnemyList
+    FriendlyList --> Iterator
+    EnemyList --> Iterator
+
+
+
+
+
+    class Character {
+        <<interface>>
+        +getName(): String
+        +getDescription(): String
+        +getHP(): int
+        +isAlive(): boolean
+    }
+    class FriendlyRat {
+        String name
+        int hp
+        String description
+        boolean alive
+        +getName(): String
+        +getDescription(): String
+        +getHP(): int
+        +isAlive(): boolean
+    }
+    class Enemy {
+        String name
+        int hp
+        String description
+        boolean alive
+        +Enemy(String name, int hp, String desc, boolean alive)
+        +getName(): String
+        +getDescription(): String
+        +getHP(): int
+        +isAlive(): boolean
+    }
+    class PopulationList {
+        <<interface>>
+        createIterator()
+    }
+    class FriendlyList {
+        List~Character~ friends
+        +FriendlyList()
+        +addItem(String name, int hp, String description)
+        +getFriends(): ArrayList
+        createIterator()
+    }
+    class EnemyList {
+        List~Character~ enemies
+        +Enemylist()
+        +addItem(String name, int hp, String description)
+        +getEnemies(): ArrayList
+        createIterator()
+    }
+    class Iterator {
+        <<interface>>
+        next()
+        hasNext()
+        remove()
+    }
+    class StatusMenu {
+        <<Client Class>>
+        PopulationList friends
+        PopulationList enemies
+        +StatusMenu(PopulationList friends, PopulationList enemies)
+        +listCharacters()
+        -listCharacters(Iterator iterator)
+    }
+

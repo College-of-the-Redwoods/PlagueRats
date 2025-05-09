@@ -1,13 +1,13 @@
 package io.github.CR.PlagueRats.backend;
 
 import com.badlogic.gdx.Game;
-import io.github.CR.PlagueRats.GUI_thaddeus.GameScreen;
+import io.github.CR.PlagueRats.GUI_gabe.*;
 
 public class TurnBasedGame extends Game {
 
     public TurnBasedGame() {
-        MapGenerator.generateCellArray(5, 5);
-        CharacterGenerator.loadCharacters();
+//        MapGenerator.generateCellArray(5, 5);
+//        CharacterGenerator.loadCharacters();
     }
 
     public void executeStep() {
@@ -30,6 +30,7 @@ public class TurnBasedGame extends Game {
 
     @Override
     public void create() {
-        this.setScreen(new GameScreen(this));
+        setScreen(new FirstMenu(this) {
+        });
     }
 }

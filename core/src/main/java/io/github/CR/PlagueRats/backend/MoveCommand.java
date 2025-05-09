@@ -19,6 +19,10 @@ public class MoveCommand implements Command {
         return nextCell;
     }
 
+    public AbstractCharacter getCharacter() {
+        return this.character;
+    }
+
     @Override
     public void execute() {
         if (!executed && !nextCell.isOccupied()) {
