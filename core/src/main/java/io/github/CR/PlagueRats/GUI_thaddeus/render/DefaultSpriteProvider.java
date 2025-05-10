@@ -7,8 +7,8 @@ import io.github.CR.PlagueRats.backend.PCCharacter;
 /**
  * DefaultSpriteProvider
  * Strategy for mapping an AbstractCharacter to its sprite path:
- *   • PCCharacter → john.png
- *   • NPCCharacter → jane.png
+ *   • PCCharacter → ratsprite.png
+ *   • NPCCharacter → villager.png
  *   • fallback → ratTestSprite2.png
  */
 public class DefaultSpriteProvider implements SpriteProvider {
@@ -19,10 +19,10 @@ public class DefaultSpriteProvider implements SpriteProvider {
 
         // // otherwise fall back to a type-based defaults:
         if (character instanceof PCCharacter) {
-            return "john.png";
+            return "ratsprite.png";
         }
         if (character instanceof NPCCharacter) {
-            return "jane.png";
+            return "villager.png";
         }else {
             return "ratTestSprite2.png";
         }

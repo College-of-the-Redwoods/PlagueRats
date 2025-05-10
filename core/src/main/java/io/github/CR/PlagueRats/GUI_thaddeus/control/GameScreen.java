@@ -57,8 +57,8 @@ public class GameScreen implements Screen {
         // 4) Renderers initialization
         mapRenderer  = new MapRenderer(cells, CELL_SIZE);
         cmdRenderer = new CommandRenderer(batch,
-            new Texture("drop.png"),
-            new Texture("sword_blue.png"),
+            new Texture("target.png"),
+            new Texture("redsplat.png"),
             CELL_SIZE);
         charRenderer = new CharacterRenderer(batch, characters, CELL_SIZE, new DefaultSpriteProvider());
 

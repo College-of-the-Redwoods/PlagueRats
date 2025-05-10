@@ -1,0 +1,10 @@
+PC: true
+Name: Plague Rat
+HP: 100
+MP: 0
+AP: 0
+XP: 0
+SP: 0
+Position: x = 4, y = 4
+Equipment: Plague, Sharp Claws
+sprite: ratsprite.png
