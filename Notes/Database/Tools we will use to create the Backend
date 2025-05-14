@@ -1,0 +1,19 @@
+The tools we will be using and a small description about them:
+
+
+1. Docker: An open-source platform that automates the deployment of applications inside lightweight, portable containers. Containers package the app with all its dependencies, making it consistent across different environments.
+
+
+2. Redis: An in-memory data structure store often used as a database, cache, and message broker. It supports data structures like strings, hashes, lists, sets, and more, and is known for its high performance and low latency.
+
+
+3. Flask: A lightweight and flexible web framework for Python. It’s simple to set up and is often used for building small to medium-sized web applications and APIs.
+
+
+4. Postman: A collaborative platform for API development. It allows developers to create, test, document, and share API requests and responses efficiently.
+
+
+5. Ngrok: A tool that creates secure tunnels to your localhost. It exposes local servers to the internet, useful for testing webhooks and running local applications remotely.
+
+
+6. Jackson: A popular Java library for processing JSON data. It’s widely used to serialize and deserialize objects to and from JSON, making it essential for RESTful APIs and data interchange in Java applications.
