@@ -1,0 +1,34 @@
+classDiagram
+    class Player {
+        -inventory: Inventory
+        +collect(resource: Collectable): void
+    }
+
+    class Collectable {
+        <<interface>>
+        +collect(): Resource
+    }
+
+    class WoodResource {
+        +collect(): Resource
+    }
+
+    class CoinPile {
+        +collect(): Resource
+    }
+
+    class Inventory {
+        -items: List<Resource>
+        +add(resource: Resource): void
+    }
+
+    class Resource {
+        -name: String
+        -amount: int
+    }
+
+    Player --> Collectable
+    Collectable <|-- WoodResource
+    Collectable <|-- CoinPile
+    Player --> Inventory
+    Inventory --> Resource
