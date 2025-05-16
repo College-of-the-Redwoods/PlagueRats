@@ -1,7 +1,7 @@
 package io.github.CR.PlagueRats.backend;
 
 import com.badlogic.gdx.Game;
-import io.github.CR.PlagueRats.GUI_thaddeus.GameScreen;
+import io.github.CR.PlagueRats.GUI_thaddeus.control.GameScreen;
 
 public class TurnBasedGame extends Game {
 

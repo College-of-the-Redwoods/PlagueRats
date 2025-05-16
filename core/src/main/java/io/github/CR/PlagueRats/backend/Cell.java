@@ -26,4 +26,8 @@ public class Cell {
         isOccupied = false;
         System.out.println("Cell at (" + position.x + ", " + position.y + ") is no longer occupied.");
     }
+
+    public float getXPos() { return position.x; }
+
+    public float getYPos() { return position.y; }
 }

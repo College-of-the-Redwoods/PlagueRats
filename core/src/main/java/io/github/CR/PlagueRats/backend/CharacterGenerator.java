@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CharacterGenerator {
+    private static boolean loaded = false;
     // Load character from .txt file
     public static AbstractCharacter loadFromFile(String filePath) throws IOException {
         boolean isPC = false;
@@ -103,6 +104,9 @@ public class CharacterGenerator {
     }
 
     public static void loadCharacters() {
+
+        if (loaded) return;          // ← guard: do nothing on subsequent calls
+        loaded = true;
         File savesDir = new File("saves");
         if (!savesDir.exists() || !savesDir.isDirectory()) {
             System.err.println("Saves directory not found!");
@@ -111,7 +115,6 @@ public class CharacterGenerator {
 
         File[] saveFiles = savesDir.listFiles((dir, name) -> name.endsWith(".txt"));
         if (saveFiles == null) return;
-
         for (File file : saveFiles) {
             try {
                 System.out.println("Loading next character...");
