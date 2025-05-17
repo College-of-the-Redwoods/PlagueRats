@@ -1,0 +1,54 @@
+I have been learning more about understanding each component of the process
+
+
+Such as a piece of code in python to spin up Flask for example,
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello, Flask!'
+
+if __name__ == '__main__':
+    # debug=True restarts on code changes; host='0.0.0.0' makes it reachable on your LAN
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+Also using Postman to obtain code to be able to create java classes that can interact with flask
+
+import java.io.IOException;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class OkHttpGet {
+    public static void main(String[] args) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Build the GET request
+        Request request = new Request.Builder()
+            .url("https://api.example.com/data?param=value")
+            .addHeader("Accept", "application/json")
+            // .addHeader("Authorization", "Bearer <token>")
+            .get()
+            .build();
+
+        // Execute and handle response
+        try (Response response = client.newCall(request).execute()) {
+            System.out.println("Status code: " + response.code());
+            if (response.body() != null) {
+                System.out.println("Response body:\n" + response.body().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Then learning more about how to parse JSON information with object mapping in JackSON for example
+
+ObjectMapper mapper = new ObjectMapper();
+MyData data = mapper.readValue(response.body(), MyData.class);
+
